@@ -1,4 +1,4 @@
-# PageSpeed Insights Tester with Puppeteer
+# Automated SEO Tests with Puppeteer
 
 This Node.js script uses Puppeteer to run Google PageSpeed Insights tests in the browser and captures screenshots of the test results.
 
