@@ -21,11 +21,11 @@ npm install
 Edit the `config.js` file to add your URLs and corresponding page types:
 
 ```
-`module.exports = {
+module.exports = {
   'homepage': 'https://www.example.com',
   'about': 'https://www.example.com/about',
   // Add more URLs as needed
-};`
+};
 ```
 
 ## Usage
@@ -33,6 +33,6 @@ Edit the `config.js` file to add your URLs and corresponding page types:
 Run the script by executing the following command in the terminal:
 
 ```
-`node index.js`
+node index.js
 ```
 The script will run PageSpeed Insights tests for each URL specified in the `config.js` file. Screenshots of the test results will be saved in the `screenshots` folder, with filenames in the format `pagetype_timestamp.png`.
