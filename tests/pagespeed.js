@@ -1,13 +1,4 @@
-const fs = require('fs');
-const puppeteer = require('puppeteer');
-const config = require('./config');
-
-const screenshotDir = 'screenshots';
 const pagespeedUrl = 'https://pagespeed.web.dev/analysis?url=';
-
-if (!fs.existsSync(screenshotDir)) {
-  fs.mkdirSync(screenshotDir);
-}
 
 const runPageSpeedTest = async (page, url) => {
   const psiUrl = `${pagespeedUrl}${encodeURIComponent(url)}`;
@@ -64,40 +55,30 @@ const takeScreenshot = async (page, filepath) => {
   }
 };
 
-(async () => {
-  const browser = await puppeteer.launch({ headless: false });
+module.exports = async (browser, pageType, url, isFirstPage) => {
+  const page = await browser.newPage();
 
-  let isFirstPage = true;
-  for (const [pageType, url] of Object.entries(config)) {
-    const page = await browser.newPage();
+  // Set viewport size
+  await page.setViewport({
+    width: 1280,
+    height: 800,
+  });
 
-    // Set viewport size
-    await page.setViewport({
-      width: 1280,
-      height: 800,
-    });
+  try {
+    const psiUrl = await runPageSpeedTest(page, url);
 
-    try {
-      const psiUrl = await runPageSpeedTest(page, url);
+    await clickOkGotIt(page, isFirstPage);
 
-      await clickOkGotIt(page, isFirstPage);
+    const timestamp = new Date().toISOString().replace(/[:.-]/g, '_');
+    const filepath = `screenshots/psi_${pageType}_${timestamp}.png`;
 
-      const timestamp = new Date().toISOString().replace(/[:.-]/g, '_');
-      const filepath = `${screenshotDir}/${pageType}_${timestamp}.png`;
+    await takeScreenshot(page, filepath);
 
-      await takeScreenshot(page, filepath);
-
-      const updatedUrl = page.url();
-      console.log(`Updated PageSpeed Insights test URL for ${pageType}: ${updatedUrl}`);
-    } catch (err) {
-      console.error(`Error running PageSpeed test for ${url}:`, err);
-    }
-
-    await page.close();
-
-    // Set isFirstPage to false after the first test
-    isFirstPage = false;
+    const updatedUrl = page.url();
+    console.log(`Updated PageSpeed Insights test URL for ${pageType}: ${updatedUrl}`);
+  } catch (err) {
+    console.error(`Error running PageSpeed test for ${url}:`, err);
   }
 
-  await browser.close();
-})();
+  await page.close();
+};

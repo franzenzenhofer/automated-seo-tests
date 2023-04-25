@@ -18,13 +18,22 @@ npm install
 
 ## Configuration
 
-Edit the `config.js` file to add your URLs and corresponding page types:
+Edit the `config.js` file to add your URLs and corresponding page types and replace `/path/to/your/chrome` with the path to your system's Chrome executable. The path varies depending on your operating system:
+
+-   Windows: `'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe'`
+-   macOS: `'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'`
+-   Linux: `'/usr/bin/google-chrome'` (may vary depending on the installation method)
+
+Now the script will use your system-installed Chrome in incognito mode when running the tests.
 
 ```
 module.exports = {
-  'homepage': 'https://www.example.com',
-  'about': 'https://www.example.com/about',
-  // Add more URLs as needed
+  chromePath: '/path/to/your/chrome',
+  pages: {
+    'homepage': 'https://www.example.com',
+    'about': 'https://www.example.com/about',
+    // Add more URLs as needed
+  }
 };
 ```
 
