@@ -41,6 +41,12 @@ npm install
 
 4.  Set up the `config.js` file with your Chrome executable path, and the list of pages you want to test.
 
+Replace `path_to_your_chrome_executable` with the path to your system's Chrome executable. The path varies depending on your operating system:
+
+-   Windows: `'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe'`
+-   macOS: `'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'`
+-   Linux: `'/usr/bin/google-chrome'` (may vary depending on the installation method)
+
 ```
 module.exports = {
 
