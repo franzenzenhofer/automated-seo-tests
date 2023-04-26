@@ -23,19 +23,26 @@ Installation
 
 1.  Clone the repository to your local machine:
 
-`git clone https://github.com/yourusername/yourrepository.git`
+```
+git clone https://github.com/yourusername/yourrepository.git
+```
 
 2.  Change to the project directory:
 
-`cd yourrepository`
+```
+cd yourrepository
+```
 
 3.  Install the required dependencies:
 
-`npm install`
+```
+npm install
+```
 
 4.  Set up the `config.js` file with your Chrome executable path, and the list of pages you want to test.
 
-`module.exports = {
+```
+module.exports = {
 
   // The path to your Chrome executable
   chromePath: "path_to_your_chrome_executable",
@@ -46,7 +53,8 @@ Installation
     about: "https://www.example.com/about",
     // ...
   },
-};`
+};
+```
 
 Running the Script
 ------------------
