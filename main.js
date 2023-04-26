@@ -14,16 +14,6 @@ if (!fs.existsSync(screenshotDir)) {
 }
 
 (async () => {
-  /* const browser = await puppeteer.launch({
-    headless: false,
-    executablePath: config.chromePath,
-    args: [
-      '--incognito',
-      '--user-data-dir=/Users/hg/Library/Application Support/Google/Chrome', // Replace with the correct path to your user data directory
-      '--profile-directory=Profile 2' // Replace 'Profile 1' with the correct profile directory name
-    ],
-  }); */
-
   let browser;
   try {
     browser = await puppeteer.launch({
@@ -41,7 +31,7 @@ if (!fs.existsSync(screenshotDir)) {
     await pagespeedTest(browser, pageType, url, isFirstPage);
     await jsOnOffTest(browser, pageType, url);
     await mobileFriendlyTest(browser, pageType, url);
-    //await urlInspectionTest(browser, pageType, url);
+    await urlInspectionTest(browser, pageType, url);
     isFirstPage = false;
   }
 
