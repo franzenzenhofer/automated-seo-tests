@@ -24,13 +24,13 @@ Installation
 1.  Clone the repository to your local machine:
 
 ```
-git clone https://github.com/yourusername/yourrepository.git
+git clone https://github.com/hg-f19n/automated-seo-tests.git
 ```
 
 2.  Change to the project directory:
 
 ```
-cd yourrepository
+cd automated-seo-tests
 ```
 
 3.  Install the required dependencies:
