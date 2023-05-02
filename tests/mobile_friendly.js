@@ -113,13 +113,16 @@ const runMobileFriendlyTest = async (page, url, pageType) => {
 
   // Select the last <div data-leave-open-on-resize> element and take a screenshot
   const openOnResizeXPath = "//div[@data-leave-open-on-resize]";
+
+  let resourcesScreenshotPath;
+
   try {
     await page.waitForXPath(openOnResizeXPath, { timeout: 10000 });
     const openOnResizeDivs = await page.$x(openOnResizeXPath);
-
+  
     if (openOnResizeDivs && openOnResizeDivs.length > 0) {
       const lastOpenOnResizeDiv = openOnResizeDivs[openOnResizeDivs.length - 1];
-      const resourcesScreenshotPath = `screenshots/mobile-friendly-page-resources_${pageType}_${timestamp}.png`;
+      resourcesScreenshotPath = `screenshots/mobile-friendly-page-resources_${pageType}_${timestamp}.png`;
       await lastOpenOnResizeDiv.screenshot({ path: resourcesScreenshotPath });
       console.log(`Screenshot of embedded resources saved at: ${resourcesScreenshotPath}`);
     } else {
@@ -128,12 +131,18 @@ const runMobileFriendlyTest = async (page, url, pageType) => {
   } catch (err) {
     console.warn('Error taking screenshot of embedded resources:', err);
   }
+  
 
   const updatedUrl = page.url();
   console.log(`Updated Mobile-Friendly test URL for ${pageType}: ${updatedUrl}`);
-  logToCsv(pageType, updatedUrl); 
+  
+  // Return the necessary data
+  return {
+    testUrl: updatedUrl,
+    screenshotPath: filepath,
+    resourcesScreenshotPath: resourcesScreenshotPath,
+  };  
 };
-
 
 module.exports = async (browser, pageType, url) => {
   const page = await browser.newPage();
@@ -144,11 +153,10 @@ module.exports = async (browser, pageType, url) => {
     height: 1000,
   });
 
-  await runMobileFriendlyTest(page, url, pageType); // Pass pageType as an argument
+  const mobileFriendlyData = await runMobileFriendlyTest(page, url, pageType); // Pass pageType as an argument
 
   await page.close();
+
+  // Return the mobileFriendlyData
+  return mobileFriendlyData;
 };
-
-
-
-

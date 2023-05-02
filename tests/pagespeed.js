@@ -78,9 +78,15 @@ module.exports = async (browser, pageType, url, isFirstPage) => {
 
     const updatedUrl = page.url();
     console.log(`Updated PageSpeed Insights test URL for ${pageType}: ${updatedUrl}`);
-    logToCsv(pageType, updatedUrl);
+
+    // Return the necessary data
+    return {
+      testUrl: updatedUrl,
+      screenshotPath: filepath,
+    };
   } catch (err) {
     console.error(`Error running PageSpeed test for ${url}:`, err);
+  } finally {
+    await page.close();
   }
-  await page.close();
 };

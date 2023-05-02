@@ -7,6 +7,8 @@ const jsOnOffTest = require("./tests/js_on_off");
 const mobileFriendlyTest = require("./tests/mobile_friendly");
 const urlInspectionTest = require("./tests/url_inspection");
 
+const { logToCsv } = require('./utils'); // Import logToCsv
+
 const screenshotDir = "screenshots";
 
 if (!fs.existsSync(screenshotDir)) {
@@ -27,10 +29,27 @@ if (!fs.existsSync(screenshotDir)) {
 
   let isFirstPage = true;
   for (const [pageType, url] of Object.entries(config.pages)) {
-    await pagespeedTest(browser, pageType, url, isFirstPage);
-    await jsOnOffTest(browser, pageType, url);
-    await mobileFriendlyTest(browser, pageType, url);
-    await urlInspectionTest(browser, pageType, url);
+    const pagespeedData = await pagespeedTest(browser, pageType, url, isFirstPage);
+    const jsOnOffData = await jsOnOffTest(browser, pageType, url);
+    const mobileFriendlyData = await mobileFriendlyTest(browser, pageType, url);
+    const urlInspectionData = await urlInspectionTest(browser, pageType, url);
+
+    const data = {
+      pageUrl: url,
+      pagespeedInsightsTestUrl: pagespeedData.testUrl,
+      pagespeedInsightsScreenshot: pagespeedData.screenshotPath,
+      mobileFriendlyTestUrl: mobileFriendlyData.testUrl,
+      mobileFriendlyScreenshot: mobileFriendlyData.screenshotPath,
+      mobileFriendlyResourcesScreenshot: mobileFriendlyData.resourcesScreenshotPath,
+      jsOnScreenshot: jsOnOffData.jsOnScreenshotPath,
+      jsOffScreenshot: jsOnOffData.jsOffScreenshotPath,
+      inspectUrlTestUrl: urlInspectionData.testUrl,
+      inspectUrlScreenshot: urlInspectionData.screenshotPath,
+      inspectUrlResourcesScreenshot: urlInspectionData.resourcesScreenshotPath,
+    };
+
+    logToCsv(pageType, data);
+
     isFirstPage = false;
   }
 

@@ -30,16 +30,27 @@ const runTest = async (page, url, jsEnabled, pageType) => {
   const filepath = `screenshots/${prefix}_${pageType}_${timestamp}.png`; // Add pageType
 
   await takeScreenshot(page, filepath);
+
+  return {
+    jsEnabled: jsEnabled,
+    testUrl: url,
+    screenshotPath: filepath,
+  };
 };
 
 module.exports = async (browser, pageType, url) => {
   const page = await browser.newPage();
 
   // Run the test with JS enabled
-  await runTest(page, url, true, pageType);
+  const jsOnResults = await runTest(page, url, true, pageType);
 
   // Run the test with JS disabled
-  await runTest(page, url, false, pageType);
+  const jsOffResults = await runTest(page, url, false, pageType);
 
   await page.close();
+
+  return {
+    jsOnResults: jsOnResults,
+    jsOffResults: jsOffResults,
+  };
 };

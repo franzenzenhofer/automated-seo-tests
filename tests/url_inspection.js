@@ -58,7 +58,7 @@ const runUrlInspectionTest = async (browser, pageType, url) => {
 
   // Set the viewport size
   await page.setViewport({
-    width: 1600,
+    width: 1400,
     height: 1000,
   });
 
@@ -161,6 +161,9 @@ const runUrlInspectionTest = async (browser, pageType, url) => {
 
   // Select the last <div data-leave-open-on-resize> element and take a screenshot
   const openOnResizeXPath = "//div[@data-leave-open-on-resize]";
+
+  let resourcesScreenshotPath;
+  
   try {
     await page.waitForXPath(openOnResizeXPath, { timeout: 10000 });
     const openOnResizeDivs = await page.$x(openOnResizeXPath);
@@ -179,9 +182,18 @@ const runUrlInspectionTest = async (browser, pageType, url) => {
 
   const updatedUrl = page.url();
   console.log(`Updated Live Test URL for ${pageType}: ${updatedUrl}`);
-  logToCsv(pageType, updatedUrl);
 
   await page.close();
+
+  // Return the necessary data
+  return {
+    testUrl: updatedUrl,
+    screenshotPath: filepath,
+    resourcesScreenshotPath: resourcesScreenshotPath,
+  };
 };
 
-module.exports = runUrlInspectionTest;
+module.exports = async (browser, pageType, url) => {
+  const urlInspectionData = await runUrlInspectionTest(browser, pageType, url);
+  return urlInspectionData;
+};
