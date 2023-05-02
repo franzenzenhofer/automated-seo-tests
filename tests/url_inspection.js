@@ -1,6 +1,8 @@
 const { google } = require('googleapis');
 const searchconsole = google.searchconsole('v1');
 const { URL } = require('url');
+const { logToCsv } = require('../utils');
+
 
 const config = require('../config');
 const pages = config.pages;
@@ -175,7 +177,9 @@ const runUrlInspectionTest = async (browser, pageType, url) => {
     console.warn('Error taking screenshot of embedded resources:', err);
   }
 
-  console.log(`Live Test URL: ${page.url()}`);
+  const updatedUrl = page.url();
+  console.log(`Updated Live Test URL for ${pageType}: ${updatedUrl}`);
+  logToCsv(pageType, updatedUrl);
 
   await page.close();
 };

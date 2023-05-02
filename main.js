@@ -19,7 +19,6 @@ if (!fs.existsSync(screenshotDir)) {
     browser = await puppeteer.launch({
       headless: false,
       executablePath: config.chromePath,
-      args: ["--incognito"],
     });
   } catch (error) {
     console.error("Error launching the browser:", error);
@@ -28,10 +27,10 @@ if (!fs.existsSync(screenshotDir)) {
 
   let isFirstPage = true;
   for (const [pageType, url] of Object.entries(config.pages)) {
-    // await pagespeedTest(browser, pageType, url, isFirstPage);
-    // await jsOnOffTest(browser, pageType, url);
+    await pagespeedTest(browser, pageType, url, isFirstPage);
+    await jsOnOffTest(browser, pageType, url);
     await mobileFriendlyTest(browser, pageType, url);
-    // await urlInspectionTest(browser, pageType, url);
+    await urlInspectionTest(browser, pageType, url);
     isFirstPage = false;
   }
 

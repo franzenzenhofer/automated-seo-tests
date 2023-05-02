@@ -1,6 +1,6 @@
-// tests/mobile_friendly.js
-
 const readline = require('readline');
+const { logToCsv } = require('../utils');
+
 const mobileFriendlyTestUrl = 'https://search.google.com/test/mobile-friendly?url=';
 
 const waitForUserInput = () => {
@@ -131,6 +131,7 @@ const runMobileFriendlyTest = async (page, url, pageType) => {
 
   const updatedUrl = page.url();
   console.log(`Updated Mobile-Friendly test URL for ${pageType}: ${updatedUrl}`);
+  logToCsv(pageType, updatedUrl); 
 };
 
 

@@ -1,3 +1,5 @@
+const { logToCsv } = require('../utils');
+
 const pagespeedUrl = 'https://pagespeed.web.dev/analysis?url=';
 
 const runPageSpeedTest = async (page, url) => {
@@ -76,9 +78,9 @@ module.exports = async (browser, pageType, url, isFirstPage) => {
 
     const updatedUrl = page.url();
     console.log(`Updated PageSpeed Insights test URL for ${pageType}: ${updatedUrl}`);
+    logToCsv(pageType, updatedUrl);
   } catch (err) {
     console.error(`Error running PageSpeed test for ${url}:`, err);
   }
-
   await page.close();
 };
