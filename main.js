@@ -28,10 +28,10 @@ if (!fs.existsSync(screenshotDir)) {
 
   let isFirstPage = true;
   for (const [pageType, url] of Object.entries(config.pages)) {
-    await pagespeedTest(browser, pageType, url, isFirstPage);
-    await jsOnOffTest(browser, pageType, url);
+    // await pagespeedTest(browser, pageType, url, isFirstPage);
+    // await jsOnOffTest(browser, pageType, url);
     await mobileFriendlyTest(browser, pageType, url);
-    await urlInspectionTest(browser, pageType, url);
+    // await urlInspectionTest(browser, pageType, url);
     isFirstPage = false;
   }
 

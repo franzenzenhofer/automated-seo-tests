@@ -1,5 +1,16 @@
 const { google } = require('googleapis');
 const searchconsole = google.searchconsole('v1');
+const { URL } = require('url');
+
+const config = require('../config');
+const pages = config.pages;
+
+// Extract the siteUrl from the first URL in the pages object
+const firstPageUrl = Object.values(pages)[0];
+const siteUrlBase = new URL(firstPageUrl).origin;
+
+// Add a trailing slash to siteUrl if it doesn't have one
+const siteUrl = siteUrlBase.endsWith('/') ? siteUrlBase : `${siteUrlBase}/`;
 
 const inspectUrl = async (url) => {
   try {
@@ -10,7 +21,7 @@ const inspectUrl = async (url) => {
       auth: authClient,
       requestBody: {
         inspectionUrl: url,
-        siteUrl: 'https://www.fullstackoptimization.com/',
+        siteUrl: siteUrl,
       },
     });
 

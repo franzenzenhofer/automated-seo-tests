@@ -22,6 +22,8 @@ const takeScreenshot = async (page, filepath) => {
   console.log(`Screenshot saved at: ${filepath}`);
 };
 
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 const runMobileFriendlyTest = async (page, url, pageType) => {
   const testUrl = `${mobileFriendlyTestUrl}${encodeURIComponent(url)}`;
   await page.goto(testUrl, { waitUntil: 'networkidle2' });
@@ -42,6 +44,7 @@ const runMobileFriendlyTest = async (page, url, pageType) => {
     if (viewTestedPageBtn) {
       await viewTestedPageBtn.click();
       console.log('Clicked "View tested page" button');
+      await delay(2000);
     }
   } catch (err) {
     console.warn('Error clicking "View tested page" button:', err);
@@ -69,6 +72,62 @@ const runMobileFriendlyTest = async (page, url, pageType) => {
   const filepath = `screenshots/mobile-friendly_${pageType}_${timestamp}.png`;
 
   await takeScreenshot(page, filepath);
+
+  // Click the 'More Info' tab
+  try {
+    await page.waitForXPath("//div[contains(., 'more info') and @role='tab']", {
+      timeout: 10000,
+    });
+
+    const [moreInfoTab] = await page.$x(
+      "//div[contains(., 'more info') and @role='tab']"
+    );
+
+    if (moreInfoTab) {
+      await moreInfoTab.click();
+      console.log('Clicked "More Info" tab');
+      await delay(1000);
+    }
+  } catch (err) {
+    console.warn('Error clicking "More Info" tab:', err);
+  }
+
+  // Click the 'Page resources' tab
+  try {
+    await page.waitForXPath("//div[contains(., 'Page resources') and @role='button']", {
+      timeout: 10000,
+    });
+
+    const [pageResources] = await page.$x(
+      "//div[contains(., 'Page resources') and @role='button']"
+    );
+
+    if (pageResources) {
+      await pageResources.click();
+      console.log('Clicked "More Info" tab');
+      await delay(1000);
+    }
+  } catch (err) {
+    console.warn('Error clicking "Page Resources" tab:', err);
+  }
+
+  // Select the last <div data-leave-open-on-resize> element and take a screenshot
+  const openOnResizeXPath = "//div[@data-leave-open-on-resize]";
+  try {
+    await page.waitForXPath(openOnResizeXPath, { timeout: 10000 });
+    const openOnResizeDivs = await page.$x(openOnResizeXPath);
+
+    if (openOnResizeDivs && openOnResizeDivs.length > 0) {
+      const lastOpenOnResizeDiv = openOnResizeDivs[openOnResizeDivs.length - 1];
+      const resourcesScreenshotPath = `screenshots/mobile-friendly-page-resources_${pageType}_${timestamp}.png`;
+      await lastOpenOnResizeDiv.screenshot({ path: resourcesScreenshotPath });
+      console.log(`Screenshot of embedded resources saved at: ${resourcesScreenshotPath}`);
+    } else {
+      console.warn('No <div data-leave-open-on-resize> elements found');
+    }
+  } catch (err) {
+    console.warn('Error taking screenshot of embedded resources:', err);
+  }
 
   const updatedUrl = page.url();
   console.log(`Updated Mobile-Friendly test URL for ${pageType}: ${updatedUrl}`);
