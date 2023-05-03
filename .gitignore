@@ -8,6 +8,7 @@ lerna-debug.log*
 .pnpm-debug.log*
 screenshots
 credentials
+results
 client_secrets.json
 token.json
 

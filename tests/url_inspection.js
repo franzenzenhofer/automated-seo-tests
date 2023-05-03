@@ -170,7 +170,7 @@ const runUrlInspectionTest = async (browser, pageType, url) => {
 
     if (openOnResizeDivs && openOnResizeDivs.length > 0) {
       const lastOpenOnResizeDiv = openOnResizeDivs[openOnResizeDivs.length - 1];
-      const resourcesScreenshotPath = `screenshots/url-inspection-page-resources_${pageType}_${timestamp}.png`;
+      resourcesScreenshotPath = `screenshots/url-inspection-page-resources_${pageType}_${timestamp}.png`;
       await lastOpenOnResizeDiv.screenshot({ path: resourcesScreenshotPath });
       console.log(`Screenshot of embedded resources saved at: ${resourcesScreenshotPath}`);
     } else {

@@ -4,8 +4,16 @@ const timestamp = new Date().toISOString().replace(/[:.-]/g, '_');
 
 
 const logToCsv = async (pageType, data) => {
+  const resultsFolderPath = './results';
   const csvFilename = `results-${timestamp}.csv`;
-  const csvExists = fs.existsSync(csvFilename);
+  const csvFilePath = `${resultsFolderPath}/${csvFilename}`;
+
+  // Create the "results" folder if it doesn't exist
+  if (!fs.existsSync(resultsFolderPath)) {
+    fs.mkdirSync(resultsFolderPath);
+  }
+
+  const csvExists = fs.existsSync(csvFilePath);
 
   if (!csvExists) {
     const headers = [
@@ -22,7 +30,7 @@ const logToCsv = async (pageType, data) => {
       'inspect_url_screenshot',
       'inspect_url_resources_screenshot',
     ];
-    fs.writeFileSync(csvFilename, headers.join(',') + '\n');
+    fs.writeFileSync(csvFilePath, headers.join(',') + '\n');
   }
 
   const row = [
@@ -40,7 +48,7 @@ const logToCsv = async (pageType, data) => {
     data.inspectUrlResourcesScreenshot,
   ];
 
-  fs.appendFileSync(csvFilename, row.join(',') + '\n');
+  fs.appendFileSync(csvFilePath, row.join(',') + '\n');
 };
 
 
