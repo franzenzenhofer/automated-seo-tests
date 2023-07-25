@@ -37,7 +37,7 @@ const inspectUrl = async (url) => {
   return null;
 };
 
-const waitForElementByXPath = async (page, xpath, timeout = 60000) => {
+const waitForElementByXPath = async (page, xpath, timeout = 120000) => {
   const element = await page.waitForXPath(xpath, { timeout });
   return element;
 };

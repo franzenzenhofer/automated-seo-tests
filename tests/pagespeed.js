@@ -30,6 +30,14 @@ const clickOkGotIt = async (page, isFirstPage) => {
 
 const takeScreenshot = async (page, filepath) => {
   try {
+    await page.waitForSelector('div#performance', { visible: true, timeout: 10000 });
+    await page.waitForXPath(
+      "//span[contains(., 'Opportunities') and contains(@class, 'lh-audit-group__title')]",
+      { visible: true, timeout: 10000 }
+    );
+
+    await page.waitForTimeout(1500);
+
     const performanceDiv = await page.$('div#performance');
     const opportunitiesTitle = await page.$x("//span[contains(., 'Opportunities') and contains(@class, 'lh-audit-group__title')]");
 
