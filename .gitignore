@@ -1,4 +1,8 @@
 .DS_Store
+results
+client_secrets.json
+token.json
+cookies.json
 
 # Logs
 logs
@@ -10,9 +14,7 @@ lerna-debug.log*
 .pnpm-debug.log*
 screenshots
 credentials
-results
-client_secrets.json
-token.json
+
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
