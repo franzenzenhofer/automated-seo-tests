@@ -70,20 +70,20 @@ function sleep(ms) {
 
   let isFirstPage = true;
   for (const [pageType, url] of Object.entries(config.pages)) {
-    const pagespeedData = await pagespeedTest(browser, pageType, url, isFirstPage);
-    const jsOnOffData = await jsOnOffTest(browser, pageType, url);
-    const mobileFriendlyData = await mobileFriendlyTest(browser, pageType, url);
+    //const pagespeedData = await pagespeedTest(browser, pageType, url, isFirstPage);
+    //const jsOnOffData = await jsOnOffTest(browser, pageType, url);
+    //const mobileFriendlyData = await mobileFriendlyTest(browser, pageType, url);
     const urlInspectionData = await urlInspectionTest(browser, pageType, url);
 
     const data = {
-      pageUrl: url,
-      pagespeedInsightsTestUrl: pagespeedData.testUrl,
-      pagespeedInsightsScreenshot: pagespeedData.screenshotPath,
-      mobileFriendlyTestUrl: mobileFriendlyData.testUrl,
-      mobileFriendlyScreenshot: mobileFriendlyData.screenshotPath,
-      mobileFriendlyResourcesScreenshot: mobileFriendlyData.resourcesScreenshotPath,
-      jsOnScreenshot: jsOnOffData.jsOnResults.screenshotPath,
-      jsOffScreenshot: jsOnOffData.jsOffResults.screenshotPath,
+      //pageUrl: url,
+      //pagespeedInsightsTestUrl: pagespeedData.testUrl,
+      //pagespeedInsightsScreenshot: pagespeedData.screenshotPath,
+      //mobileFriendlyTestUrl: mobileFriendlyData.testUrl,
+      //mobileFriendlyScreenshot: mobileFriendlyData.screenshotPath,
+      //mobileFriendlyResourcesScreenshot: mobileFriendlyData.resourcesScreenshotPath,
+      //jsOnScreenshot: jsOnOffData.jsOnResults.screenshotPath,
+      //jsOffScreenshot: jsOnOffData.jsOffResults.screenshotPath,
       inspectUrlTestUrl: urlInspectionData.testUrl,
       inspectUrlScreenshot: urlInspectionData.screenshotPath,
       inspectUrlResourcesScreenshot: urlInspectionData.resourcesScreenshotPath,
