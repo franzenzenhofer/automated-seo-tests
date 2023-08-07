@@ -70,9 +70,9 @@ const runUrlInspectionTest = async (browser, pageType, url) => {
 
   const liveTestCompleteXPath = "//div[@role='button' and contains(., 'Live test')]";
   
-  await waitForElementByXPath(page, liveTestCompleteXPath, 60000);
+  await waitForElementByXPath(page, liveTestCompleteXPath, 120000);
 
-  await delay(4000);
+  await delay(2000);
 
   // Click the 'View tested page' button
   try {
