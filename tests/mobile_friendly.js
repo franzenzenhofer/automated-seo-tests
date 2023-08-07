@@ -143,7 +143,6 @@ const runMobileFriendlyTest = async (page, url, pageType) => {
     console.warn('Error taking screenshot of embedded resources:', err);
   }
   
-
   const updatedUrl = page.url();
   console.log(`Updated Mobile-Friendly test URL for ${pageType}: ${updatedUrl}`);
   
