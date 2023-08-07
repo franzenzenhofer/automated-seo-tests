@@ -1,6 +1,9 @@
 # user data
 cookies.json
 .DS_Store
+results
+client_secrets.json
+token.json
 
 # Logs
 logs
