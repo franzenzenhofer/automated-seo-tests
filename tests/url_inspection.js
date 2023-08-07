@@ -1,8 +1,5 @@
-const { google } = require('googleapis');
-const searchconsole = google.searchconsole('v1');
 const { URL } = require('url');
 const { logToCsv } = require('../utils');
-
 
 const config = require('../config');
 const pages = config.pages;
@@ -14,29 +11,6 @@ const siteUrlBase = new URL(firstPageUrl).origin;
 // Add a trailing slash to siteUrl if it doesn't have one
 const siteUrl = siteUrlBase.endsWith('/') ? siteUrlBase : `${siteUrlBase}/`;
 
-const inspectUrl = async (url) => {
-  try {
-    const authenticate = require('../authenticate');
-    const authClient = await authenticate();
-
-    const response = await searchconsole.urlInspection.index.inspect({
-      auth: authClient,
-      requestBody: {
-        inspectionUrl: url,
-        siteUrl: siteUrl,
-      },
-    });
-
-    if (response && response.data) {
-      return response.data.inspectionResult;
-    }
-  } catch (err) {
-    console.error(`Error inspecting URL: ${url}`, err);
-  }
-
-  return null;
-};
-
 const waitForElementByXPath = async (page, xpath, timeout = 120000) => {
   const element = await page.waitForXPath(xpath, { timeout });
   return element;
@@ -45,31 +19,37 @@ const waitForElementByXPath = async (page, xpath, timeout = 120000) => {
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const runUrlInspectionTest = async (browser, pageType, url) => {
-  const inspectionResult = await inspectUrl(url);
-
-  if (!inspectionResult) {
-    console.warn(`Unable to inspect URL: ${url}`);
-    return;
-  }
-
-  console.log(`URL Inspection Result Link for ${pageType}:`, inspectionResult.inspectionResultLink);
-
   const page = await browser.newPage();
 
-  // Set the viewport size
   await page.setViewport({
     width: 1400,
     height: 1000,
   });
 
-  await page.goto(inspectionResult.inspectionResultLink, { waitUntil: 'networkidle2' });
+  const testUrl = `https://search.google.com/search-console?resource_id=${encodeURIComponent(siteUrl)}`
+  await page.goto(testUrl, { waitUntil: 'networkidle2' });
+  await delay(1000);
 
+  // Type the URL to test in the search input.
+  const inputXPath = "//input[@aria-label='Inspect any URL in the current resource']";
+  const inputField = await page.waitForXPath(inputXPath, { visible: true });
+  await inputField.type(url);
+  await delay(1000);
+
+  // Click the search button.
+  const buttonXPath = "//button[@aria-label='Search' and @role='button']";
+  const searchButton = await page.waitForXPath(buttonXPath, { visible: true });
+  await searchButton.click();
+
+  // Long delay so the initial inspect URL request can finish.
+  await delay(20000);
+
+  // Click the Test Live URL button
   const testLiveUrlButtonXPath = "//div[@role='button' and contains(., 'Test live URL')]";
-  const testLiveUrlButton = await waitForElementByXPath(page, testLiveUrlButtonXPath);
+  const testLiveUrlButton = await waitForElementByXPath(page, testLiveUrlButtonXPath, 120000);
   await testLiveUrlButton.click();
 
   const liveTestCompleteXPath = "//div[@role='button' and contains(., 'Live test')]";
-  
   await waitForElementByXPath(page, liveTestCompleteXPath, 120000);
 
   await delay(2000);
@@ -163,7 +143,7 @@ const runUrlInspectionTest = async (browser, pageType, url) => {
   const openOnResizeXPath = "//div[@data-leave-open-on-resize]";
 
   let resourcesScreenshotPath;
-  
+
   try {
     await page.waitForXPath(openOnResizeXPath, { timeout: 10000 });
     const openOnResizeDivs = await page.$x(openOnResizeXPath);
