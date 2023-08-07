@@ -3,7 +3,7 @@ const { logToCsv } = require('../utils');
 
 const mobileFriendlyTestUrl = 'https://search.google.com/test/mobile-friendly?url=';
 
-const waitForUserInput = () => {
+/* const waitForUserInput = () => {
   const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
@@ -15,11 +15,16 @@ const waitForUserInput = () => {
       resolve();
     });
   });
-};
+}; */
 
 const takeScreenshot = async (page, filepath) => {
   await page.screenshot({ path: filepath, fullPage: true });
   console.log(`Screenshot saved at: ${filepath}`);
+};
+
+const waitForElementByXPath = async (page, xpath, timeout = 120000) => {
+  const element = await page.waitForXPath(xpath, { timeout });
+  return element;
 };
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -28,8 +33,14 @@ const runMobileFriendlyTest = async (page, url, pageType) => {
   const testUrl = `${mobileFriendlyTestUrl}${encodeURIComponent(url)}`;
   await page.goto(testUrl, { waitUntil: 'networkidle2' });
 
-  console.log('Please solve the reCAPTCHA manually.');
-  await waitForUserInput();
+  // console.log('Please solve the reCAPTCHA manually.');
+  // await waitForUserInput();
+
+  const testCompleteXPath = "//div[@data-text='Test results']"
+  await waitForElementByXPath(page, testCompleteXPath, 120000);
+
+  await delay(2000);
+
 
   // Click the 'View tested page' button
   try {
