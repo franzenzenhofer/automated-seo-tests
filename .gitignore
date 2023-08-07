@@ -1,8 +1,6 @@
-.DS_Store
-results
-client_secrets.json
-token.json
+# user data
 cookies.json
+.DS_Store
 
 # Logs
 logs
