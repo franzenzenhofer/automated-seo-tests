@@ -1,4 +1,7 @@
-const { logToCsv } = require('../utils');
+const path = require('path');
+const { getSiteUrl, sanitizeString } = require('../utils/sanitizers');
+
+const siteUrl = getSiteUrl(clean = true);
 
 const pagespeedUrl = 'https://pagespeed.web.dev/analysis?url=';
 
@@ -80,12 +83,12 @@ module.exports = async (browser, pageType, url, isFirstPage) => {
     await clickOkGotIt(page, isFirstPage);
 
     const timestamp = new Date().toISOString().replace(/[:.-]/g, '_');
-    const filepath = `screenshots/psi_${pageType}_${timestamp}.png`;
+    const screenshotName = `${siteUrl}_psi_${sanitizeString(pageType)}_${timestamp}`;
+    const filepath = path.resolve(__dirname, '../screenshots', `${screenshotName}.png`);
 
     await takeScreenshot(page, filepath);
 
     const updatedUrl = page.url();
-    console.log(`Updated PageSpeed Insights test URL for ${pageType}: ${updatedUrl}`);
 
     // Return the necessary data
     return {

@@ -1,4 +1,8 @@
-// tests/js_on_off.js
+const { captureScreenshot } = require('../utils/screenshot');
+const { getSiteUrl, sanitizeString } = require('../utils/sanitizers');
+
+const siteUrl = getSiteUrl(true);
+let result;
 
 const iPhone13 = {
   name: 'iPhone 13',
@@ -14,27 +18,20 @@ const iPhone13 = {
   },
 };
 
-const takeScreenshot = async (page, filepath) => {
-  await page.screenshot({ path: filepath });
-  console.log(`Screenshot saved at: ${filepath}`);
-};
-
 const runTest = async (page, url, jsEnabled, pageType) => {
   await page.setUserAgent(iPhone13.userAgent);
   await page.setViewport(iPhone13.viewport);
   await page.setJavaScriptEnabled(jsEnabled);
 
   await page.goto(url, { waitUntil: 'networkidle2' });
-  const timestamp = new Date().toISOString().replace(/[:.-]/g, '_');
   const prefix = jsEnabled ? 'js-on' : 'js-off';
-  const filepath = `screenshots/${prefix}_${pageType}_${timestamp}.png`; // Add pageType
 
-  await takeScreenshot(page, filepath);
+  result = await captureScreenshot(page, siteUrl, null, `${prefix}_${sanitizeString(pageType)}`);
 
   return {
     jsEnabled: jsEnabled,
     testUrl: url,
-    screenshotPath: filepath,
+    screenshotPath: result.screenshotPath,
   };
 };
 

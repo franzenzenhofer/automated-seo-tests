@@ -1,157 +1,61 @@
-const readline = require('readline');
-const { logToCsv } = require('../utils');
+const { captureScreenshot } = require('../utils/screenshot');
+const { sleep, waitForElementByXPath, waitAndClickByXPath } = require('../utils/navigation');
+const { getSiteUrl, sanitizeString } = require('../utils/sanitizers');
 
-const mobileFriendlyTestUrl = 'https://search.google.com/test/mobile-friendly?url=';
+const siteUrl = getSiteUrl(clean = true);
 
-/* const waitForUserInput = () => {
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-  });
-
-  return new Promise((resolve) => {
-    rl.question('Press Enter to continue after solving the reCAPTCHA and after the Mobile Friendly Test is finished ...', () => {
-      rl.close();
-      resolve();
-    });
-  });
-}; */
-
-const takeScreenshot = async (page, filepath) => {
-  await page.screenshot({ path: filepath, fullPage: true });
-  console.log(`Screenshot saved at: ${filepath}`);
-};
-
-const waitForElementByXPath = async (page, xpath, timeout = 120000) => {
-  const element = await page.waitForXPath(xpath, { timeout });
-  return element;
-};
-
-const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+let result;
 
 const runMobileFriendlyTest = async (page, url, pageType) => {
-  const testUrl = `${mobileFriendlyTestUrl}${encodeURIComponent(url)}`;
+  const testUrl = `https://search.google.com/test/mobile-friendly?url=${encodeURIComponent(url)}`;
   await page.goto(testUrl, { waitUntil: 'networkidle2' });
 
-  // console.log('Please solve the reCAPTCHA manually.');
-  // await waitForUserInput();
-
+  // Wait for the test to finish.
   const testCompleteXPath = "//div[@data-text='Test results']"
   await waitForElementByXPath(page, testCompleteXPath, 120000);
 
-  await delay(2000);
+  await sleep(1000);
 
+  // Click the 'View tested page' button.
+  await waitAndClickByXPath(page, "//div[contains(., 'View tested page') and @role='button']");
 
-  // Click the 'View tested page' button
-  try {
-    await page.waitForXPath("//div[contains(., 'View tested page') and @role='button']", {
-      timeout: 10000,
-    });
+  // Click the 'Screenshot' tab.
+  await waitAndClickByXPath(page, "//div[contains(., 'screenshot') and @role='tab']");
 
-    const [viewTestedPageBtn] = await page.$x(
-      "//div[contains(., 'View tested page') and @role='button']"
-    );
+  // Capture test result screenshot.
+  result = await captureScreenshot(page, siteUrl, null, `mobile-friendly_${sanitizeString(pageType)}`);
+  console.log(result);
 
-    if (viewTestedPageBtn) {
-      await viewTestedPageBtn.click();
-      console.log('Clicked "View tested page" button');
-      await delay(2000);
-    }
-  } catch (err) {
-    console.warn('Error clicking "View tested page" button:', err);
-  }
+  // Click the 'More Info' tab.
+  await waitAndClickByXPath(page, "//div[contains(., 'more info') and @role='tab']");
 
-  // Click the 'Screenshot' tab
-  try {
-    await page.waitForXPath("//div[contains(., 'screenshot') and @role='tab']", {
-      timeout: 10000,
-    });
-
-    const [screenshotTab] = await page.$x(
-      "//div[contains(., 'screenshot') and @role='tab']"
-    );
-
-    if (screenshotTab) {
-      await screenshotTab.click();
-      console.log('Clicked "Screenshot" tab');
-    }
-  } catch (err) {
-    console.warn('Error clicking "Screenshot" tab:', err);
-  }
-
-  const timestamp = new Date().toISOString().replace(/[:.-]/g, '_');
-  const filepath = `screenshots/mobile-friendly_${pageType}_${timestamp}.png`;
-
-  await takeScreenshot(page, filepath);
-
-  // Click the 'More Info' tab
-  try {
-    await page.waitForXPath("//div[contains(., 'more info') and @role='tab']", {
-      timeout: 10000,
-    });
-
-    const [moreInfoTab] = await page.$x(
-      "//div[contains(., 'more info') and @role='tab']"
-    );
-
-    if (moreInfoTab) {
-      await moreInfoTab.click();
-      console.log('Clicked "More Info" tab');
-      await delay(1000);
-    }
-  } catch (err) {
-    console.warn('Error clicking "More Info" tab:', err);
-  }
-
-  // Click the 'Page resources' tab
-  try {
-    await page.waitForXPath("//div[contains(., 'Page resources') and @role='button']", {
-      timeout: 10000,
-    });
-
-    const [pageResources] = await page.$x(
-      "//div[contains(., 'Page resources') and @role='button']"
-    );
-
-    if (pageResources) {
-      await pageResources.click();
-      console.log('Clicked "More Info" tab');
-      await delay(1000);
-    }
-  } catch (err) {
-    console.warn('Error clicking "Page Resources" tab:', err);
-  }
+  // Click the 'Page resources' tab.
+  await waitAndClickByXPath(page, "//div[contains(., 'Page resources') and @role='button']");
 
   // Select the last <div data-leave-open-on-resize> element and take a screenshot
   const openOnResizeXPath = "//div[@data-leave-open-on-resize]";
-
-  let resourcesScreenshotPath;
-
   try {
     await page.waitForXPath(openOnResizeXPath, { timeout: 10000 });
     const openOnResizeDivs = await page.$x(openOnResizeXPath);
-  
+
     if (openOnResizeDivs && openOnResizeDivs.length > 0) {
       const lastOpenOnResizeDiv = openOnResizeDivs[openOnResizeDivs.length - 1];
-      resourcesScreenshotPath = `screenshots/mobile-friendly-page-resources_${pageType}_${timestamp}.png`;
-      await lastOpenOnResizeDiv.screenshot({ path: resourcesScreenshotPath });
-      console.log(`Screenshot of embedded resources saved at: ${resourcesScreenshotPath}`);
+      result = await captureScreenshot(lastOpenOnResizeDiv, siteUrl, null, `mobile-friendly-page-resources_${sanitizeString(pageType)}`);
+      console.log(result);
     } else {
       console.warn('No <div data-leave-open-on-resize> elements found');
     }
   } catch (err) {
     console.warn('Error taking screenshot of embedded resources:', err);
   }
-  
+
   const updatedUrl = page.url();
-  console.log(`Updated Mobile-Friendly test URL for ${pageType}: ${updatedUrl}`);
-  
-  // Return the necessary data
+
   return {
     testUrl: updatedUrl,
-    screenshotPath: filepath,
-    resourcesScreenshotPath: resourcesScreenshotPath,
-  };  
+    //screenshotPath: filepath,
+    //resourcesScreenshotPath: resourcesScreenshotPath,
+  };
 };
 
 module.exports = async (browser, pageType, url) => {
@@ -163,10 +67,9 @@ module.exports = async (browser, pageType, url) => {
     height: 1000,
   });
 
-  const mobileFriendlyData = await runMobileFriendlyTest(page, url, pageType); // Pass pageType as an argument
+  const mobileFriendlyData = await runMobileFriendlyTest(page, url, pageType);
 
   await page.close();
 
-  // Return the mobileFriendlyData
   return mobileFriendlyData;
 };
