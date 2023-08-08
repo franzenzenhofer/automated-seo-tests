@@ -1,18 +1,27 @@
 const config = require('../config');
 const pages = config.pages;
 
-const getSiteUrl = (clean = false) => {
+/**
+ * Retrieves the base URL of the first page in the 'pages' object. 
+ * The returned object contains both the full and sanitized versions of the URL.
+ * 
+ * @returns {Object} An object containing:
+ *   - full {string}: The full base URL with a trailing slash, if needed.
+ *   - domain {string}: The sanitized version of the URL, with protocol and www. removed, if present.
+ *
+ */
+const getSiteUrl = () => {
   const firstPageUrl = Object.values(pages)[0];
   let siteUrlBase = new URL(firstPageUrl).origin;
   // Add a trailing slash to siteUrl if it doesn't have one
   siteUrlBase = siteUrlBase.endsWith('/') ? siteUrlBase : `${siteUrlBase}/`;
 
-  // Sanitize URL if 'clean' parameter is true
-  if (clean) {
-    siteUrlBase = domainNameFromUrl(siteUrlBase);
-  }
+  const siteUrlCleaned = domainNameFromUrl(siteUrlBase);
 
-  return siteUrlBase;
+  return {
+    full: siteUrlBase,
+    domain: siteUrlCleaned
+  };
 };
 
 const domainNameFromUrl = (url) => {

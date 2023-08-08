@@ -1,7 +1,6 @@
 const { captureScreenshot } = require('../utils/screenshot');
-const { getSiteUrl, sanitizeString } = require('../utils/sanitizers');
+const { sanitizeString } = require('../utils/sanitizers');
 
-const siteUrl = getSiteUrl(true);
 let result;
 
 const iPhone13 = {
@@ -26,7 +25,7 @@ const runTest = async (page, url, jsEnabled, pageType) => {
   await page.goto(url, { waitUntil: 'networkidle2' });
   const prefix = jsEnabled ? 'js-on' : 'js-off';
 
-  result = await captureScreenshot(page, siteUrl, null, `${prefix}_${sanitizeString(pageType)}`);
+  result = await captureScreenshot(page, null, `${prefix}_${sanitizeString(pageType)}`);
 
   return {
     jsEnabled: jsEnabled,

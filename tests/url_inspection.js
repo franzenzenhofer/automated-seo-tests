@@ -1,11 +1,8 @@
 const { captureScreenshot } = require('../utils/screenshot');
 const { sleep, waitForElementByXPath, waitAndClickByXPath } = require('../utils/navigation');
-const { getSiteUrl, sanitizeString } = require('../utils/sanitizers');
+const { sanitizeString } = require('../utils/sanitizers');
 
-const siteUrl = getSiteUrl();
-const siteUrlDomain = getSiteUrl(clean = true);
-
-const runUrlInspectionTest = async (browser, pageType, url) => {
+const runUrlInspectionTest = async (browser, pageType, url, siteUrl) => {
   const page = await browser.newPage();
 
   await page.setViewport({
@@ -13,7 +10,7 @@ const runUrlInspectionTest = async (browser, pageType, url) => {
     height: 1000,
   });
 
-  const testUrl = `https://search.google.com/search-console?resource_id=${encodeURIComponent(siteUrl)}`
+  const testUrl = `https://search.google.com/search-console?resource_id=${encodeURIComponent(siteUrl.full)}`
   await page.goto(testUrl, { waitUntil: 'networkidle2' });
   await sleep(1000);
 
@@ -64,7 +61,7 @@ const runUrlInspectionTest = async (browser, pageType, url) => {
   }
 
   // Capture test result screenshot.
-  result = await captureScreenshot(page, siteUrlDomain, null, `mobile-friendly_${sanitizeString(pageType)}`);
+  result = await captureScreenshot(page, null, `mobile-friendly_${sanitizeString(pageType)}`);
   console.log(result);
 
   // Click the 'More Info' tab
@@ -116,7 +113,7 @@ const runUrlInspectionTest = async (browser, pageType, url) => {
 
     if (openOnResizeDivs && openOnResizeDivs.length > 0) {
       const lastOpenOnResizeDiv = openOnResizeDivs[openOnResizeDivs.length - 1];
-      result = await captureScreenshot(lastOpenOnResizeDiv, siteUrlDomain, null, `mobile-friendly-page-resources_${sanitizeString(pageType)}`);
+      result = await captureScreenshot(lastOpenOnResizeDiv, null, `mobile-friendly-page-resources_${sanitizeString(pageType)}`);
       console.log(result);
     } else {
       console.warn('No <div data-leave-open-on-resize> elements found');
@@ -137,7 +134,7 @@ const runUrlInspectionTest = async (browser, pageType, url) => {
   };
 };
 
-module.exports = async (browser, pageType, url) => {
-  const urlInspectionData = await runUrlInspectionTest(browser, pageType, url);
+module.exports = async (browser, pageType, url, siteUrl) => {
+  const urlInspectionData = await runUrlInspectionTest(browser, pageType, url, siteUrl);
   return urlInspectionData;
 };

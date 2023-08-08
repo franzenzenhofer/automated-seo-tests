@@ -1,8 +1,6 @@
 const { captureScreenshot } = require('../utils/screenshot');
 const { sleep, waitForElementByXPath, waitAndClickByXPath } = require('../utils/navigation');
-const { getSiteUrl, sanitizeString } = require('../utils/sanitizers');
-
-const siteUrl = getSiteUrl(clean = true);
+const { sanitizeString } = require('../utils/sanitizers');
 
 let result;
 
@@ -23,7 +21,7 @@ const runMobileFriendlyTest = async (page, url, pageType) => {
   await waitAndClickByXPath(page, "//div[contains(., 'screenshot') and @role='tab']");
 
   // Capture test result screenshot.
-  result = await captureScreenshot(page, siteUrl, null, `mobile-friendly_${sanitizeString(pageType)}`);
+  result = await captureScreenshot(page, null, `mobile-friendly_${sanitizeString(pageType)}`);
   console.log(result);
 
   // Click the 'More Info' tab.
@@ -40,7 +38,7 @@ const runMobileFriendlyTest = async (page, url, pageType) => {
 
     if (openOnResizeDivs && openOnResizeDivs.length > 0) {
       const lastOpenOnResizeDiv = openOnResizeDivs[openOnResizeDivs.length - 1];
-      result = await captureScreenshot(lastOpenOnResizeDiv, siteUrl, null, `mobile-friendly-page-resources_${sanitizeString(pageType)}`);
+      result = await captureScreenshot(lastOpenOnResizeDiv, null, `mobile-friendly-page-resources_${sanitizeString(pageType)}`);
       console.log(result);
     } else {
       console.warn('No <div data-leave-open-on-resize> elements found');
