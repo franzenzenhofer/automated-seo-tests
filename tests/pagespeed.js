@@ -1,7 +1,5 @@
 const path = require('path');
-const { getSiteUrl, sanitizeString } = require('../utils/sanitizers');
-
-const siteUrl = getSiteUrl(clean = true);
+const { sanitizeString } = require('../utils/sanitizers');
 
 const pagespeedUrl = 'https://pagespeed.web.dev/analysis?url=';
 
@@ -68,7 +66,7 @@ const takeScreenshot = async (page, filepath) => {
   }
 };
 
-module.exports = async (browser, pageType, url, isFirstPage) => {
+module.exports = async (browser, pageType, url, siteUrl, isFirstPage) => {
   const page = await browser.newPage();
 
   // Set viewport size
@@ -83,7 +81,7 @@ module.exports = async (browser, pageType, url, isFirstPage) => {
     await clickOkGotIt(page, isFirstPage);
 
     const timestamp = new Date().toISOString().replace(/[:.-]/g, '_');
-    const screenshotName = `${siteUrl}_psi_${sanitizeString(pageType)}_${timestamp}`;
+    const screenshotName = `${siteUrl.domain}_psi_${sanitizeString(pageType)}_${timestamp}`;
     const filepath = path.resolve(__dirname, '../screenshots', `${screenshotName}.png`);
 
     await takeScreenshot(page, filepath);

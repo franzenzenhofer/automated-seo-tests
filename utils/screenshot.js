@@ -1,17 +1,19 @@
 const path = require('path');
+const { getSiteUrl } = require('../utils/sanitizers');
 
 /**
  * Asynchronously captures a screenshot of a Puppeteer Page or ElementHandle, with custom options
  * @param {Page|ElementHandle} elementOrPage - A Puppeteer Page object or ElementHandle to capture a screenshot of
- * @param {string} siteUrl - The URL of the site for naming the screenshot file
  * @param {string} screenshotXPath - The XPath to an element on the page to capture a screenshot of, if an ElementHandle is not provided
  * @param {string} screenshotNamePrefix - A prefix to prepend to the screenshot file name
  * @param {number} [padding=5] - Optional: The padding to add to the screenshot dimensions, if an ElementHandle is provided
  * @param {number} [maxHeight=1200] - Optional: The maximum height of the screenshot, if an ElementHandle is provided
  * @returns {Promise<Object>} - A promise that resolves to an object with the screenshot path, or rejects with an error
  */
-async function captureScreenshot(elementOrPage, siteUrl, screenshotXPath, screenshotNamePrefix, padding = 5, maxHeight = 1200) {
-  let screenshotHolder, screenshotPath
+async function captureScreenshot(elementOrPage, screenshotXPath, screenshotNamePrefix, padding = 5, maxHeight = 1200) {
+  let screenshotHolder, screenshotPath;
+
+  const siteUrl = getSiteUrl();
 
   try {
     // If a Page object is passed and an XPath is provided, find the ElementHandle for the XPath on the page
@@ -27,7 +29,7 @@ async function captureScreenshot(elementOrPage, siteUrl, screenshotXPath, screen
     }
 
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-    const screenshotName = `${siteUrl}_${screenshotNamePrefix}_${timestamp}`;
+    const screenshotName = `${siteUrl.domain}_${screenshotNamePrefix}_${timestamp}`;
     screenshotPath = path.resolve(__dirname, '../screenshots', `${screenshotName}.png`);
 
     // If an ElementHandle was passed or found, capture a screenshot of the element
