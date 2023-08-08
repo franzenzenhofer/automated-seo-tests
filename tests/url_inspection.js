@@ -55,7 +55,6 @@ const runUrlInspectionTest = async (browser, pageType, url) => {
 
     if (screenshotTabs.length > 1) {
       await screenshotTabs[1].click(); // Click the second matching element
-      console.log('Clicked "Screenshot" tab');
       await sleep(2000); // Add a 2-second delay
     } else {
       console.warn('Less than two "Screenshot" tabs found');
@@ -79,7 +78,6 @@ const runUrlInspectionTest = async (browser, pageType, url) => {
 
     if (moreInfoTabs.length > 1) {
       await moreInfoTabs[1].click(); // Click the second matching element
-      console.log('Clicked "More Info" tab');
       await sleep(2000); // Add a 2-second delay
     } else {
       console.warn('Less than two "More Info" tabs found');
@@ -99,7 +97,6 @@ const runUrlInspectionTest = async (browser, pageType, url) => {
 
     if (pageResourcesButtons.length > 1) {
       await pageResourcesButtons[1].click(); // Click the second matching element
-      console.log('Clicked the second "Page resources" button');
       await sleep(2000); // Add a 2-second delay
     } else {
       console.warn('Less than two "Page resources" buttons found');

@@ -51,16 +51,6 @@ const logToCsv = async (pageType, data) => {
   fs.appendFileSync(csvFilePath, row.join(',') + '\n');
 };
 
-
-const getSiteUrl = (pages) => {
-  const firstPageUrl = Object.values(pages)[0];
-  const siteUrlBase = new URL(firstPageUrl).origin;
-
-  // Add a trailing slash to siteUrl if it doesn't have one
-  return siteUrlBase.endsWith('/') ? siteUrlBase : `${siteUrlBase}/`;
-};
-
 module.exports = {
   logToCsv,
-  getSiteUrl,
 };
