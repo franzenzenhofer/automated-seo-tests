@@ -1,0 +1,42 @@
+/* @theme f19n-theme */
+
+@import 'default';
+
+footer {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  bottom: 0;
+  left: 0;
+  padding: 7px 20px;
+  width: 100%;
+  justify-content: space-between;
+  color: #777777;
+  background: linear-gradient(92deg, #ededed, white);
+}
+
+footer img {
+  background: transparent;
+}
+
+svg > foreignObject > section:after {
+  bottom: 10px;
+  color: #434343;
+  font-size: 13px;
+  padding: 0;
+  position: absolute;
+  right: 20px;
+  content: "Page " attr(data-marpit-pagination);
+}
+
+section {
+width: 1920px;
+height: 1080px;
+font-size: 20px;
+padding: 40px;
+}
+
+section.default img {
+  max-height: 860px;
+  max-width: 1440px;
+}
