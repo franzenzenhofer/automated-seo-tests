@@ -1,7 +1,6 @@
 const fs = require("fs");
 const puppeteer = require("puppeteer");
 const readline = require('readline');
-//const config = require("./config");
 const yargs = require('yargs/yargs');
 const { hideBin } = require('yargs/helpers');
 

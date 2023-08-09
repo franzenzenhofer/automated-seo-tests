@@ -8,7 +8,6 @@ const pages = config.pages;
  * @returns {Object} An object containing:
  *   - full {string}: The full base URL with a trailing slash, if needed.
  *   - domain {string}: The sanitized version of the URL, with protocol and www. removed, if present.
- *
  */
 const getSiteUrl = () => {
   const firstPageUrl = Object.values(pages)[0];
@@ -24,10 +23,23 @@ const getSiteUrl = () => {
   };
 };
 
+/**
+ * Removes the protocol (http/https) and optional 'www.' prefix from a given URL.
+ * It also strips the trailing slash if present.
+ *
+ * @param {string} url - The URL to process.
+ * @returns {string} The sanitized domain name from the provided URL.
+ */
 const domainNameFromUrl = (url) => {
   return url.replace(/^https?:\/\/(www\.)?/,'').replace(/\/$/,'');
 };
 
+/**
+ * Removes spaces from a string and converts it to lowercase.
+ *
+ * @param {string} str - The string to sanitize.
+ * @returns {string} The sanitized string.
+ */
 function sanitizeString(str) {
   return str.replace(/\s+/g, '').toLowerCase();
 }

@@ -2,7 +2,8 @@ const path = require('path');
 const { getSiteUrl } = require('../utils/sanitizers');
 
 /**
- * Asynchronously captures a screenshot of a Puppeteer Page or ElementHandle, with custom options
+ * Asynchronously captures a screenshot of a Puppeteer Page or ElementHandle, with custom options.
+ * 
  * @param {Page|ElementHandle} elementOrPage - A Puppeteer Page object or ElementHandle to capture a screenshot of
  * @param {string} screenshotXPath - The XPath to an element on the page to capture a screenshot of, if an ElementHandle is not provided
  * @param {string} screenshotNamePrefix - A prefix to prepend to the screenshot file name
