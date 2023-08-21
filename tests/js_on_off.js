@@ -1,5 +1,6 @@
 const { captureScreenshot } = require('../utils/screenshot');
 const { sanitizeString } = require('../utils/sanitizers');
+const markdown = require('../utils/markdown');
 
 let result;
 
@@ -34,7 +35,7 @@ const runTest = async (page, url, jsEnabled, pageType) => {
   };
 };
 
-module.exports = async (browser, pageType, url) => {
+module.exports = async (browser, pageType, url, markdownFilePath) => {
   const page = await browser.newPage();
 
   // Run the test with JS enabled
@@ -42,6 +43,8 @@ module.exports = async (browser, pageType, url) => {
 
   // Run the test with JS disabled
   const jsOffResults = await runTest(page, url, false, pageType);
+
+  await markdown.generateMarkdownSlideJSonoff('JS on/off', pageType, url, jsOnResults.screenshotPath, jsOffResults.screenshotPath, markdownFilePath);
 
   await page.close();
 

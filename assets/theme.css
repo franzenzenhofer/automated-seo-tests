@@ -1,0 +1,89 @@
+/* @theme f19n-theme */
+
+@import 'default';
+
+html {
+  box-sizing: border-box;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+a {
+  text-decoration: underline;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+h1 {
+  font-size: 2em;
+}
+
+h2 {
+  margin: 0;
+}
+
+header {
+  top: 0;
+  left: 0;
+  line-height: 1;
+  padding: 20px 20px;
+  width: 100%;
+  color: #434343;
+  font-size: 20px;
+  background: #ededed;
+}
+
+footer {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  bottom: 0;
+  left: 0;
+  padding: 14px 20px;
+  width: 100%;
+  color: #434343;
+  background: linear-gradient(92deg, #ededed, white);
+  line-height: 1;
+}
+
+footer img {
+  background: transparent;
+  height: 32px;
+  display: block;
+  padding: 0 5px;
+}
+
+footer a {
+  padding: 0 5px;
+}
+
+section[data-paginate="true"]:after {
+  bottom: 14px !important;
+  color: #434343 !important;
+  font-size: 16px !important;
+  padding: 0 !important;
+  position: absolute !important;
+  right: 20px !important;
+  content: "Page " attr(data-marpit-pagination) !important;
+  line-height: 1;
+}
+
+section {
+width: 1920px;
+height: 1080px;
+font-size: 20px;
+padding: 72px 40px 56px 40px;
+}
+
+section img {
+  padding: 5px;
+  border: 2px solid #ededed;
+}
+
+section.default img {
+  max-height: 760px;
+  max-width: 1440px;
+}

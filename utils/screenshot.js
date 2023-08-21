@@ -52,7 +52,7 @@ async function captureScreenshot(elementOrPage, screenshotXPath, screenshotNameP
       });
     } else if (screenshotHolder.constructor.name === 'CDPPage') {
       // If a Page object was passed and no ElementHandle was found, capture a full-page screenshot
-      await screenshotHolder.screenshot({ path: screenshotPath, fullPage: true });
+      await screenshotHolder.screenshot({ path: screenshotPath });
     } else {
       throw new Error('Invalid argument, expected puppeteer.Page or puppeteer.ElementHandle');
     }

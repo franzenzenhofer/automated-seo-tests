@@ -1,8 +1,10 @@
 const { captureScreenshot } = require('../utils/screenshot');
 const { sleep, waitForElementByXPath, waitAndClickByXPath } = require('../utils/navigation');
 const { sanitizeString } = require('../utils/sanitizers');
+const markdown = require('../utils/markdown');
 
-let result;
+let inspectScreenshot;
+let resourcesScreenshot;
 
 const runMobileFriendlyTest = async (page, url, pageType) => {
   const testUrl = `https://search.google.com/test/mobile-friendly?url=${encodeURIComponent(url)}`;
@@ -21,8 +23,7 @@ const runMobileFriendlyTest = async (page, url, pageType) => {
   await waitAndClickByXPath(page, "//div[contains(., 'screenshot') and @role='tab']");
 
   // Capture test result screenshot.
-  result = await captureScreenshot(page, null, `mobile-friendly_${sanitizeString(pageType)}`);
-  console.log(result);
+  inspectScreenshot = await captureScreenshot(page, null, `mobile-friendly_${sanitizeString(pageType)}`);
 
   // Click the 'More Info' tab.
   await waitAndClickByXPath(page, "//div[contains(., 'more info') and @role='tab']");
@@ -38,8 +39,7 @@ const runMobileFriendlyTest = async (page, url, pageType) => {
 
     if (openOnResizeDivs && openOnResizeDivs.length > 0) {
       const lastOpenOnResizeDiv = openOnResizeDivs[openOnResizeDivs.length - 1];
-      result = await captureScreenshot(lastOpenOnResizeDiv, null, `mobile-friendly-page-resources_${sanitizeString(pageType)}`);
-      console.log(result);
+      resourcesScreenshot = await captureScreenshot(lastOpenOnResizeDiv, null, `mobile-friendly-page-resources_${sanitizeString(pageType)}`);
     } else {
       console.warn('No <div data-leave-open-on-resize> elements found');
     }
@@ -51,12 +51,12 @@ const runMobileFriendlyTest = async (page, url, pageType) => {
 
   return {
     testUrl: updatedUrl,
-    //screenshotPath: filepath,
-    //resourcesScreenshotPath: resourcesScreenshotPath,
+    screenshotPath: inspectScreenshot.screenshotPath,
+    resourcesScreenshotPath: resourcesScreenshot.screenshotPath,
   };
 };
 
-module.exports = async (browser, pageType, url) => {
+module.exports = async (browser, pageType, url, markdownFilePath) => {
   const page = await browser.newPage();
 
   // Set the viewport size
@@ -66,7 +66,9 @@ module.exports = async (browser, pageType, url) => {
   });
 
   const mobileFriendlyData = await runMobileFriendlyTest(page, url, pageType);
-
+  
+  await markdown.generateMarkdownInspectAndMobileFriendly('Google Mobile Friendly Test', pageType, url, mobileFriendlyData.screenshotPath, mobileFriendlyData.resourcesScreenshotPath, mobileFriendlyData.testUrl, markdownFilePath);
+  
   await page.close();
 
   return mobileFriendlyData;
