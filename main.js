@@ -66,6 +66,7 @@ if (argv.url || argv.u) {
 
   try {
     await loadCookies(page);
+    await sleep(2000);
   } catch (error) {
     if (error.message === 'No cookies file found.') {
       console.log('Navigating to Google sign in page.');
@@ -96,13 +97,12 @@ if (argv.url || argv.u) {
   let isFirstPage = true;
   const siteUrl = getSiteUrl();
   const markdownFilePath = await markdown.createNewMarkdownFile(siteUrl.domain);
-
   
   for (const [pageType, url] of Object.entries(pages)) {
-    //const pagespeedData = await pagespeedTest(browser, pageType, url, siteUrl, isFirstPage);
-    const jsOnOffData = await jsOnOffTest(browser, pageType, url);
-    //const mobileFriendlyData = await mobileFriendlyTest(browser, pageType, url);
-    //const urlInspectionData = await urlInspectionTest(browser, pageType, url, siteUrl);
+    const pagespeedData = await pagespeedTest(browser, pageType, url, siteUrl, isFirstPage, markdownFilePath);
+    const jsOnOffData = await jsOnOffTest(browser, pageType, url, markdownFilePath);
+    const mobileFriendlyData = await mobileFriendlyTest(browser, pageType, url, markdownFilePath);
+    const urlInspectionData = await urlInspectionTest(browser, pageType, url, siteUrl, markdownFilePath);
 
     /* const data = {
       pageUrl: url,

@@ -1,5 +1,8 @@
 const fs = require("fs");
 const path = require("path");
+const { getSiteUrl, getCurrentTimestamp } = require('../utils/sanitizers');
+
+const siteUrl = getSiteUrl();
 
 /**
  * Creates a new markdown file with a custom front matter.
@@ -16,17 +19,17 @@ const createNewMarkdownFile = async (cleanSiteUrl) => {
   const logoPath = path.join(__dirname, '../assets', 'logo.svg');
   const relativelogoPath = path.relative(markdownDir, logoPath);
 
-
-
   const frontMatter = 
 `---
-theme: custom-theme
+theme: f19n-theme
 paginate: true
-header: 'Header content'
-footer: '![image](${relativelogoPath})'
+footer: 'Automated SEO Test Report for ${siteUrl.full} - Generated: ${getCurrentTimestamp()} - Powered by [https://www.fullstackoptimization.com/](https://www.fullstackoptimization.com/)'
 ---
 
-#test
+# Automated SEO Tests
+## ${siteUrl.full}
+
+---
 
 `;
 
@@ -35,27 +38,31 @@ footer: '![image](${relativelogoPath})'
 };
 
 /**
- * Generates a markdown slide with a headline, screenshot, and page URL.
- * This slide is appended to the specified markdown file.
+ * Generates and appends a markdown slide to a markdown file.
  * 
- * @param {string} headline - The main title for the slide.
- * @param {string} screenshotPath - Path to the screenshot image.
- * @param {string} pageUrl - Web page URL associated with the slide.
- * @param {string} markdownFilePath - Path to the markdown file to which the slide will be appended.
+ * @param {string} headline - Slide headline.
+ * @param {string} pageType - Type of the page.
+ * @param {string} pageUrl - URL of the page.
+ * @param {string} screenshotPath - Path to the screenshot.
+ * @param {string} screenshotUrl - URL of the screenshot.
+ * @param {string} markdownFilePath - Path to the markdown file where the slide will be appended.
  */
-const generateMarkdownSlide = async (headline, screenshotPath, pageUrl, markdownFilePath) => {
+const generateMarkdownSlide = async (headline, pageType, pageUrl, screenshotPath, screenshotUrl, markdownFilePath) => {
   try {
     const markdownDir = path.resolve(__dirname, '../markdown');
     const relativeScreenshotPath = path.relative(markdownDir, screenshotPath);
     const markdownSlide = 
     
 `
-<!-- _class: default -->
+<!-- 
+_class: default 
+_header: '${pageType} (${pageUrl})'
+-->
 
 # ${headline}
 
 ![w:auto h:auto](${relativeScreenshotPath})
-[${pageUrl}](${pageUrl})
+[${screenshotUrl}](${screenshotUrl})
 
 ---
 
@@ -68,20 +75,16 @@ const generateMarkdownSlide = async (headline, screenshotPath, pageUrl, markdown
 };
 
 /**
- * Generates a markdown slide with a main headline and two sub-sections.
- * Each sub-section contains a sub-headline, screenshot, and page URL.
- * This slide is appended to the specified markdown file.
+ * Generates and appends a markdown slide showing comparison between JS on and off.
  * 
- * @param {string} headline - The main title for the slide.
- * @param {string} subheadline1 - The title for the first sub-section.
- * @param {string} subheadline2 - The title for the second sub-section.
- * @param {string} screenshotPath1 - Path to the first screenshot image.
- * @param {string} screenshotPath2 - Path to the second screenshot image.
- * @param {string} pageUrl1 - Web page URL for the first sub-section.
- * @param {string} pageUrl2 - Web page URL for the second sub-section.
- * @param {string} markdownFilePath - Path to the markdown file to which the slide will be appended.
+ * @param {string} headline - Slide headline.
+ * @param {string} pageType - Type of the page.
+ * @param {string} pageUrl - URL of the page.
+ * @param {string} screenshotPath1 - Path to the screenshot with JS on.
+ * @param {string} screenshotPath2 - Path to the screenshot with JS off.
+ * @param {string} markdownFilePath - Path to the markdown file where the slide will be appended.
  */
-const generateMarkdownSlideWithTwoImages = async (headline, subheadline1, subheadline2, screenshotPath1, screenshotPath2, pageUrl1, pageUrl2, markdownFilePath) => {
+const generateMarkdownSlideJSonoff = async (headline, pageType, pageUrl, screenshotPath1, screenshotPath2, markdownFilePath) => {
   try {
     const markdownDir = path.resolve(__dirname, '../markdown');
     const relativeScreenshotPath1 = path.relative(markdownDir, screenshotPath1);
@@ -90,21 +93,23 @@ const generateMarkdownSlideWithTwoImages = async (headline, subheadline1, subhea
     const markdownSlide = 
     
 `
-<!-- _class: split -->
+<!-- 
+_class: default 
+_header: '${pageType} (${pageUrl})'
+-->
 
 # ${headline}
 
 <div style="display: flex; justify-content: space-between;">
-    <div style="width: 49%;">
-      <h2>${subheadline1}</h2>
+    <div style="width: 20%;">
+      <h2>JS on</h2>
       <img src="${relativeScreenshotPath1}"/>
-      <a href="${pageUrl1}">${pageUrl1}</a>
     </div>
-    <div style="width: 49%;">
-      <h2>${subheadline2}</h2>
+    <div style="width: 20%;">
+      <h2>JS off</h2>
       <img src="${relativeScreenshotPath2}"/>
-      <a href="${pageUrl2}">${pageUrl2}</a>
     </div>
+    <div style="width: 60%;"></div>
 </div>
 
 ---
@@ -117,8 +122,58 @@ const generateMarkdownSlideWithTwoImages = async (headline, subheadline1, subhea
   }
 };
 
+
+/**
+ * Generates and appends a markdown slide for URL Inspection and Mobile frienldy test.
+ * 
+ * @param {string} headline - Slide headline.
+ * @param {string} pageType - Type of the page.
+ * @param {string} pageUrl - URL of the page.
+ * @param {string} screenshotPath1 - Path to the first screenshot.
+ * @param {string} screenshotPath2 - Path to the second screenshot.
+ * @param {string} testUrl - URL for testing mobile-friendliness.
+ * @param {string} markdownFilePath - Path to the markdown file where the slide will be appended.
+ */
+const generateMarkdownInspectAndMobileFriendly = async (headline, pageType, pageUrl, screenshotPath1, screenshotPath2, testUrl, markdownFilePath) => {
+  try {
+    const markdownDir = path.resolve(__dirname, '../markdown');
+    const relativeScreenshotPath1 = path.relative(markdownDir, screenshotPath1);
+    const relativeScreenshotPath2 = path.relative(markdownDir, screenshotPath2);
+    
+    const markdownSlide = 
+    
+`
+<!-- 
+_class: default 
+_header: '${pageType} (${pageUrl})'
+-->
+
+# ${headline}
+
+<div style="display: flex; justify-content: space-between;">
+    <div style="width: 60%;">
+      <img src="${relativeScreenshotPath1}"/>
+      <a href="${testUrl}">${testUrl}</a>
+    </div>
+    <div style="width: 20%;">
+      <img src="${relativeScreenshotPath2}"/>
+    </div>
+    <div style="width: 20%;"></div>
+</div>
+
+---
+
+`;
+
+    fs.appendFileSync(markdownFilePath, markdownSlide);
+  } catch (error) {
+    console.error(`Failed to generate markdown slide. ${error}`);
+  }
+};
+
 module.exports = {
   createNewMarkdownFile,
   generateMarkdownSlide,
-  generateMarkdownSlideWithTwoImages
+  generateMarkdownSlideJSonoff,
+  generateMarkdownInspectAndMobileFriendly,
 };

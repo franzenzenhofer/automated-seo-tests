@@ -1,5 +1,6 @@
 const path = require('path');
 const { sanitizeString } = require('../utils/sanitizers');
+const markdown = require('../utils/markdown');
 
 const pagespeedUrl = 'https://pagespeed.web.dev/analysis?url=';
 
@@ -66,7 +67,7 @@ const takeScreenshot = async (page, filepath) => {
   }
 };
 
-module.exports = async (browser, pageType, url, siteUrl, isFirstPage) => {
+module.exports = async (browser, pageType, url, siteUrl, isFirstPage, markdownFilePath) => {
   const page = await browser.newPage();
 
   // Set viewport size
@@ -87,6 +88,8 @@ module.exports = async (browser, pageType, url, siteUrl, isFirstPage) => {
     await takeScreenshot(page, filepath);
 
     const updatedUrl = page.url();
+
+    await markdown.generateMarkdownSlide('Page Speed Insights', pageType, url, filepath, updatedUrl, markdownFilePath);
 
     // Return the necessary data
     return {

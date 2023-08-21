@@ -1,6 +1,11 @@
 const { captureScreenshot } = require('../utils/screenshot');
 const { sleep, waitForElementByXPath, waitAndClickByXPath } = require('../utils/navigation');
 const { sanitizeString } = require('../utils/sanitizers');
+const markdown = require('../utils/markdown');
+
+let inspectScreenshot;
+let resourcesScreenshot;
+
 
 const runUrlInspectionTest = async (browser, pageType, url, siteUrl) => {
   const page = await browser.newPage();
@@ -61,8 +66,7 @@ const runUrlInspectionTest = async (browser, pageType, url, siteUrl) => {
   }
 
   // Capture test result screenshot.
-  result = await captureScreenshot(page, null, `mobile-friendly_${sanitizeString(pageType)}`);
-  console.log(result);
+  inspectScreenshot = await captureScreenshot(page, null, `mobile-friendly_${sanitizeString(pageType)}`);
 
   // Click the 'More Info' tab
   const moreInfoTabXPath = "//div[contains(., 'more info') and @role='tab']";
@@ -105,16 +109,13 @@ const runUrlInspectionTest = async (browser, pageType, url, siteUrl) => {
   // Select the last <div data-leave-open-on-resize> element and take a screenshot
   const openOnResizeXPath = "//div[@data-leave-open-on-resize]";
 
-  let resourcesScreenshotPath;
-
   try {
     await page.waitForXPath(openOnResizeXPath, { timeout: 10000 });
     const openOnResizeDivs = await page.$x(openOnResizeXPath);
 
     if (openOnResizeDivs && openOnResizeDivs.length > 0) {
       const lastOpenOnResizeDiv = openOnResizeDivs[openOnResizeDivs.length - 1];
-      result = await captureScreenshot(lastOpenOnResizeDiv, null, `mobile-friendly-page-resources_${sanitizeString(pageType)}`);
-      console.log(result);
+      resourcesScreenshot = await captureScreenshot(lastOpenOnResizeDiv, null, `mobile-friendly-page-resources_${sanitizeString(pageType)}`);
     } else {
       console.warn('No <div data-leave-open-on-resize> elements found');
     }
@@ -129,12 +130,13 @@ const runUrlInspectionTest = async (browser, pageType, url, siteUrl) => {
   // Return the necessary data
   return {
     testUrl: updatedUrl,
-    //screenshotPath: filepath,
-    //resourcesScreenshotPath: resourcesScreenshotPath,
+    screenshotPath: inspectScreenshot.screenshotPath,
+    resourcesScreenshotPath: resourcesScreenshot.screenshotPath,
   };
 };
 
-module.exports = async (browser, pageType, url, siteUrl) => {
+module.exports = async (browser, pageType, url, siteUrl, markdownFilePath) => {
   const urlInspectionData = await runUrlInspectionTest(browser, pageType, url, siteUrl);
+  await markdown.generateMarkdownInspectAndMobileFriendly('Google Search Console - URL Inspection', pageType, url, urlInspectionData.screenshotPath, urlInspectionData.resourcesScreenshotPath, urlInspectionData.testUrl, markdownFilePath);
   return urlInspectionData;
 };
