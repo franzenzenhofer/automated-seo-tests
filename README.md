@@ -1,74 +1,95 @@
-Automated Website Testing Script
-================================
+# Web Assessment Automation Tool
 
-This script automates a series of website tests using Puppeteer and Google APIs. It performs the following tests:
+This tool is designed to assess the performance and rendering of web pages using various Google tools. It ensures that pages render correctly, especially with JavaScript, and provides an in-depth analysis via different Google utilities.
 
-1.  PageSpeed Insights Test
-2.  JavaScript On/Off Test
-3.  Mobile-Friendly Test
-4.  URL Inspection Test
+## Prerequisites
 
-For each test, the script captures screenshots and logs relevant information to the console.
+- `node` and `npm`: Ensure you have Node.js and npm installed on your machine.
+- `puppeteer`: Required for headless browser automation.
+- `readline`: For reading user input from the command line.
+- `yargs`: To handle command line arguments.
 
-Prerequisites
--------------
+## Tests
 
-Before you begin, ensure you have the following installed:
+The tool performs the following tests on the web pages:
 
--   [Node.js](https://nodejs.org/) (v14 or later)
--   [npm](https://www.npmjs.com/)
+1. **Page Speed Test** (`pagespeed`): Analyzes the speed and performance of a webpage.
+2. **JavaScript On/Off Test** (`js_on_off`): Checks the webpage's rendering with JavaScript enabled and disabled.
+3. **Mobile Friendliness Test** (`mobile_friendly`): Assesses how well the webpage performs on mobile devices.
+4. **URL Inspection Test** (`url_inspection`): Inspects the URL for any anomalies and potential improvements.
 
-Installation
-------------
+## Installation
 
-1.  Clone the repository to your local machine:
+1. Clone the repository:
 
-```
-git clone https://github.com/hg-f19n/automated-seo-tests.git
-```
+   ```bash
+   git clone [REPO_URL]
+   ```
 
-2.  Change to the project directory:
+2. Navigate to the directory:
 
-```
-cd automated-seo-tests
-```
+   ```bash
+   cd [DIRECTORY_NAME]
+   ```
 
-3.  Install the required dependencies:
+3. Install the necessary packages:
 
-```
-npm install
-```
+    ```bash
+    npm install
+    ```
 
-4.  Set up the `config.js` file with your Chrome executable path, and the list of pages you want to test.
+4. Run the tool:
 
-Replace `path_to_your_chrome_executable` with the path to your system's Chrome executable. The path varies depending on your operating system:
+- For a single URL:
 
--   Windows: `'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe'`
--   macOS: `'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'`
--   Linux: `'/usr/bin/google-chrome'` (may vary depending on the installation method)
+    ```bash
+    node [script-name.js] --url [URL]
+    ```
 
-```
-module.exports = {
+- For a batch file:
 
-  // The path to your Chrome executable
-  chromePath: "path_to_your_chrome_executable",
+    ```bash
+    node [script-name.js] --batch [FILE_PATH]
+    ```
 
-  // The list of pages you want to test
-  pages: {
-    home: "https://www.example.com/",
-    about: "https://www.example.com/about",
-    // ...
-  },
-};
-```
+## Usage
 
-Running the Script
-------------------
+### Single URL:
 
-To run the script, execute the following command in the project directory:
+    ```bash
+    node <script-name> --url [URL]
+    ```
 
-`node main.js`
+or
 
-The script will open a new Chrome window, perform the tests, and save the screenshots in the `screenshots` directory. It will also log relevant information to the console.
+    ```bash
+    node <script-name> -u [URL]
+    ```
 
-After completing the tests, the script will close the browser.
+### Batch File:
+
+    ```bash
+    node <script-name> --batch [FILE_PATH]
+    ```
+
+or
+
+    ```bash
+    node <script-name> -b [FILE_PATH]
+    ```
+
+**Batch File Format**: The batch file should be formatted as:
+
+    ```
+    PageType1: URL1
+    PageType2: URL2
+    ...
+    ```
+
+### Google Account Authentication
+
+On the first run, the tool will prompt the user to login to their Google account manually. After a successful login, cookies will be saved for subsequent runs, eliminating the need for manual login.
+
+## Output
+
+The results from each test are saved in markdown format.

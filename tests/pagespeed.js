@@ -58,7 +58,6 @@ const takeScreenshot = async (page, filepath) => {
       await page.waitForTimeout(1500);
 
       await page.screenshot({ path: filepath, clip });
-      console.log(`Screenshot saved at: ${filepath}`);
     } else {
       console.warn('Unable to capture screenshot due to missing elements.');
     }

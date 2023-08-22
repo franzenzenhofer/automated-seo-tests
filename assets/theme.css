@@ -5,7 +5,10 @@
 html {
   box-sizing: border-box;
 }
-*, *:before, *:after {
+
+*,
+*:before,
+*:after {
   box-sizing: inherit;
 }
 
@@ -19,22 +22,56 @@ a:hover {
 
 h1 {
   font-size: 2em;
+  font-weight: 700;
 }
 
 h2 {
   margin: 0;
 }
 
+section {
+  width: 1920px;
+  height: 1080px;
+  font-size: 20px;
+  padding: 80px 40px 70px 40px;
+}
+
+section img {
+  padding: 5px;
+  border: 2px solid #ededed;
+}
+
+section.default img {
+  max-height: 760px;
+  max-width: 1440px;
+}
+
+section.title h1 {
+  font-size: 3em;
+}
+
+section[data-paginate="true"]:after {
+  bottom: 14px !important;
+  color: #434343 !important;
+  font-size: 16px !important;
+  padding: 0 !important;
+  position: absolute !important;
+  right: 20px !important;
+  content: "Page " attr(data-marpit-pagination) !important;
+  line-height: 1;
+}
+
 header {
   top: 0;
   left: 0;
   line-height: 1;
-  padding: 20px 20px;
+  padding: 20px 40px;
   width: 100%;
   color: #434343;
-  font-size: 20px;
-  background: #ededed;
+  font-size: 22px;
+  border-bottom: 1px solid;
 }
+
 
 footer {
   display: flex;
@@ -42,7 +79,7 @@ footer {
   font-size: 16px;
   bottom: 0;
   left: 0;
-  padding: 14px 20px;
+  padding: 14px 40px;
   width: 100%;
   color: #434343;
   background: linear-gradient(92deg, #ededed, white);
@@ -58,32 +95,4 @@ footer img {
 
 footer a {
   padding: 0 5px;
-}
-
-section[data-paginate="true"]:after {
-  bottom: 14px !important;
-  color: #434343 !important;
-  font-size: 16px !important;
-  padding: 0 !important;
-  position: absolute !important;
-  right: 20px !important;
-  content: "Page " attr(data-marpit-pagination) !important;
-  line-height: 1;
-}
-
-section {
-width: 1920px;
-height: 1080px;
-font-size: 20px;
-padding: 72px 40px 56px 40px;
-}
-
-section img {
-  padding: 5px;
-  border: 2px solid #ededed;
-}
-
-section.default img {
-  max-height: 760px;
-  max-width: 1440px;
 }

@@ -12,7 +12,6 @@ const mobileFriendlyTest = require("./tests/mobile_friendly");
 const urlInspectionTest = require("./tests/url_inspection");
 
 // Importing utilities.
-const { logToCsv } = require('./utils');
 const { saveCookies, loadCookies } = require('./utils/cookies');
 const { sleep } = require('./utils/navigation');
 const { getSiteUrl } = require('./utils/sanitizers');
@@ -39,15 +38,19 @@ if (argv.url || argv.u) {
   const lines = fileContents.split('\n');
 
   for (const line of lines) {
-    const [pageType, url] = line.split(':');
-    if (pageType && url) {
-      pages[pageType.trim()] = url.trim();
+    const parts = line.split(':');
+    if (parts.length > 1) {
+      const pageType = parts[0].trim();
+      const url = parts.slice(1).join(':').trim();  // Combine all the other parts with colon
+      pages[pageType] = url;
     }
   }
 } else {
   console.error('Please provide --url or --batch argument');
   process.exit(1);
 }
+
+console.log(pages);
 
 (async () => {
   let browser;
@@ -99,26 +102,11 @@ if (argv.url || argv.u) {
   const markdownFilePath = await markdown.createNewMarkdownFile(siteUrl.domain);
   
   for (const [pageType, url] of Object.entries(pages)) {
+    await markdown.generateMarkdownSubTitleSlide(pageType, url, markdownFilePath);
     const pagespeedData = await pagespeedTest(browser, pageType, url, siteUrl, isFirstPage, markdownFilePath);
     const jsOnOffData = await jsOnOffTest(browser, pageType, url, markdownFilePath);
     const mobileFriendlyData = await mobileFriendlyTest(browser, pageType, url, markdownFilePath);
     const urlInspectionData = await urlInspectionTest(browser, pageType, url, siteUrl, markdownFilePath);
-
-    /* const data = {
-      pageUrl: url,
-      pagespeedInsightsTestUrl: pagespeedData.testUrl,
-      pagespeedInsightsScreenshot: pagespeedData.screenshotPath,
-      mobileFriendlyTestUrl: mobileFriendlyData.testUrl,
-      mobileFriendlyScreenshot: mobileFriendlyData.screenshotPath,
-      mobileFriendlyResourcesScreenshot: mobileFriendlyData.resourcesScreenshotPath,
-      jsOnScreenshot: jsOnOffData.jsOnResults.screenshotPath,
-      jsOffScreenshot: jsOnOffData.jsOffResults.screenshotPath,
-      inspectUrlTestUrl: urlInspectionData.testUrl,
-      inspectUrlScreenshot: urlInspectionData.screenshotPath,
-      inspectUrlResourcesScreenshot: urlInspectionData.resourcesScreenshotPath,
-    };
-
-    logToCsv(pageType, data); */
 
     isFirstPage = false;
   }

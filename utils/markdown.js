@@ -24,6 +24,7 @@ const createNewMarkdownFile = async (cleanSiteUrl) => {
 theme: f19n-theme
 paginate: true
 footer: 'Automated SEO Test Report for ${siteUrl.full} - Generated: ${getCurrentTimestamp()} - Powered by [https://www.fullstackoptimization.com/](https://www.fullstackoptimization.com/)'
+_class: title
 ---
 
 # Automated SEO Tests
@@ -56,7 +57,7 @@ const generateMarkdownSlide = async (headline, pageType, pageUrl, screenshotPath
 `
 <!-- 
 _class: default 
-_header: '${pageType} (${pageUrl})'
+_header: ${pageType} (${pageUrl})
 -->
 
 # ${headline}
@@ -73,6 +74,37 @@ _header: '${pageType} (${pageUrl})'
     console.error(`Failed to generate markdown slide. ${error}`);
   }
 };
+
+
+/**
+ * Generates and appends a markdown slide showing comparison between JS on and off.
+ * 
+ * @param {string} pageType - Type of the page.
+ * @param {string} pageUrl - URL of the page.
+ * @param {string} markdownFilePath - Path to the markdown file where the slide will be appended.
+ */
+const generateMarkdownSubTitleSlide = async (pageType, pageUrl, markdownFilePath) => {
+  try {
+    const markdownSlide = 
+    
+`
+<!-- 
+_class: title 
+-->
+
+# ${pageType}
+${pageUrl}
+
+---
+
+`;
+
+    fs.appendFileSync(markdownFilePath, markdownSlide);
+  } catch (error) {
+    console.error(`Failed to generate markdown slide. ${error}`);
+  }
+};
+
 
 /**
  * Generates and appends a markdown slide showing comparison between JS on and off.
@@ -116,7 +148,7 @@ _header: '${pageType} (${pageUrl})'
 
 `;
 
-    fs.appendFileSync(markdownFilePath, markdownSlide); // append the markdown slide to the file
+    fs.appendFileSync(markdownFilePath, markdownSlide); 
   } catch (error) {
     console.error(`Failed to generate markdown slide. ${error}`);
   }
@@ -176,4 +208,5 @@ module.exports = {
   generateMarkdownSlide,
   generateMarkdownSlideJSonoff,
   generateMarkdownInspectAndMobileFriendly,
+  generateMarkdownSubTitleSlide,
 };
