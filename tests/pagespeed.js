@@ -23,7 +23,6 @@ const clickOkGotIt = async (page, isFirstPage) => {
     const [button] = await page.$x("//button[contains(., 'Ok, Got it.')]");
     if (button) {
       await button.click();
-      console.log('Clicked "Ok, Got it." button');
     }
   } catch (err) {
     console.warn('Cookie banner not found or could not be clicked:', err);

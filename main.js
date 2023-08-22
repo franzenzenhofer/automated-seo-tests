@@ -5,6 +5,7 @@ const readline = require('readline');
 const yargs = require('yargs/yargs');
 const { hideBin } = require('yargs/helpers');
 
+
 // Importing required test modules.
 const pagespeedTest = require("./tests/pagespeed");
 const jsOnOffTest = require("./tests/js_on_off");
@@ -16,8 +17,10 @@ const { saveCookies, loadCookies } = require('./utils/cookies');
 const { sleep } = require('./utils/navigation');
 const { getSiteUrl } = require('./utils/sanitizers');
 const markdown = require('./utils/markdown');
+const { convertMarkdown } = require('./utils/conversion');
 
-const directories = ['screenshots', 'markdown'];
+
+const directories = ['screenshots', 'markdown', 'results'];
 
 directories.forEach(dir => {
   const dirPath = path.join(__dirname, dir);
@@ -41,7 +44,7 @@ if (argv.url || argv.u) {
     const parts = line.split(':');
     if (parts.length > 1) {
       const pageType = parts[0].trim();
-      const url = parts.slice(1).join(':').trim();  // Combine all the other parts with colon
+      const url = parts.slice(1).join(':').trim();
       pages[pageType] = url;
     }
   }
@@ -49,8 +52,6 @@ if (argv.url || argv.u) {
   console.error('Please provide --url or --batch argument');
   process.exit(1);
 }
-
-console.log(pages);
 
 (async () => {
   let browser;
@@ -100,16 +101,23 @@ console.log(pages);
   let isFirstPage = true;
   const siteUrl = getSiteUrl();
   const markdownFilePath = await markdown.createNewMarkdownFile(siteUrl.domain);
-  
+
   for (const [pageType, url] of Object.entries(pages)) {
     await markdown.generateMarkdownSubTitleSlide(pageType, url, markdownFilePath);
-    const pagespeedData = await pagespeedTest(browser, pageType, url, siteUrl, isFirstPage, markdownFilePath);
+    //const pagespeedData = await pagespeedTest(browser, pageType, url, siteUrl, isFirstPage, markdownFilePath);
     const jsOnOffData = await jsOnOffTest(browser, pageType, url, markdownFilePath);
-    const mobileFriendlyData = await mobileFriendlyTest(browser, pageType, url, markdownFilePath);
-    const urlInspectionData = await urlInspectionTest(browser, pageType, url, siteUrl, markdownFilePath);
-
+    //const mobileFriendlyData = await mobileFriendlyTest(browser, pageType, url, markdownFilePath);
+    //const urlInspectionData = await urlInspectionTest(browser, pageType, url, siteUrl, markdownFilePath);
     isFirstPage = false;
   }
 
   await browser.close();
+
+  try {
+    const outputPaths = await convertMarkdown(markdownFilePath);
+    console.log('Conversion completed. Files saved at:', outputPaths);
+  } catch (error) {
+    console.error('Error during conversion:', error);
+  }
+
 })();
