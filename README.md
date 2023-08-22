@@ -56,25 +56,25 @@ The tool performs the following tests on the web pages:
 
 ### Single URL:
 ```
-node main.js --url [URL]
+node main.js --url https://www.example.com
 ```
 
 or
 
 ```
-node main.js -u [URL]
+node main.js -u https://www.example.com
 ```
 
 ### Batch File:
 
 ```
-node main.js --batch [FILE_PATH]
+node main.js --batch urls.txt
 ```
 
 or
 
 ```
-node main.js -b [FILE_PATH]
+node main.js -b urls.txt
 ```
 
 **Batch File Format**: The batch file should be formatted as:
