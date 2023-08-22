@@ -55,35 +55,35 @@ The tool performs the following tests on the web pages:
 ## Usage
 
 ### Single URL:
-    ```
-    node main.js --url [URL]
-    ```
+```
+node main.js --url [URL]
+```
 
 or
 
-    ```
-    node main.js -u [URL]
-    ```
+```
+node main.js -u [URL]
+```
 
 ### Batch File:
 
-    ```
-    node main.js --batch [FILE_PATH]
-    ```
+```
+node main.js --batch [FILE_PATH]
+```
 
 or
 
-    ```
-    node main.js -b [FILE_PATH]
-    ```
+```
+node main.js -b [FILE_PATH]
+```
 
 **Batch File Format**: The batch file should be formatted as:
 
-    ```
-    PageType1: URL1
-    PageType2: URL2
-    ...
-    ```
+```
+PageType1: URL1
+PageType2: URL2
+...
+```
 
 ### Google Account Authentication
 
