@@ -91,4 +91,26 @@ On the first run, the tool will prompt the user to login to their Google account
 
 ## Output
 
-The results from each test are saved in markdown format.
+The results of each test are saved in the Markdown format. These Markdown files are then automatically converted to HTML and PDF for easy sharing and reporting.
+
+### Directory Structure for Outputs:
+
+- **Markdown Outputs**: These are saved in the `./markdown` directory.
+- **HTML and PDF Outputs**: After the Markdown results are generated, they're converted into HTML and PDF formats and saved in the `./results` directory.
+
+### Conversion:
+
+The conversion of Markdown files to HTML and PDF formats is powered by Marp CLI. Our tool employs the `convertMarkdown` utility, which can be found in `./utils/conversion`, to leverage Marp's capabilities and transform Markdown documents seamlessly.
+
+If you wish to perform the conversion manually, you can execute:
+
+```javascript
+const { convertMarkdown } = require('./utils/conversion');
+const markdownFilePath = "<path_to_your_markdown_file>";
+convertMarkdown(markdownFilePath);
+```
+
+Replace <path_to_your_markdown_file> with the appropriate path.
+
+
+
