@@ -22,19 +22,19 @@ The tool performs the following tests on the web pages:
 
 1. Clone the repository:
 
-   ```bash
-   git clone [REPO_URL]
+   ```
+   git clone https://github.com/hg-f19n/automated-seo-tests.git
    ```
 
 2. Navigate to the directory:
 
-   ```bash
-   cd [DIRECTORY_NAME]
+   ```
+   cd seo-tests
    ```
 
 3. Install the necessary packages:
 
-    ```bash
+    ```
     npm install
     ```
 
@@ -42,40 +42,39 @@ The tool performs the following tests on the web pages:
 
 - For a single URL:
 
-    ```bash
-    node [script-name.js] --url [URL]
+    ```
+    node main.js --url [URL]
     ```
 
 - For a batch file:
 
-    ```bash
-    node [script-name.js] --batch [FILE_PATH]
+    ```
+    node main.js --batch [FILE_PATH]
     ```
 
 ## Usage
 
 ### Single URL:
-
-    ```bash
-    node <script-name> --url [URL]
+    ```
+    node main.js --url [URL]
     ```
 
 or
 
-    ```bash
-    node <script-name> -u [URL]
+    ```
+    node main.js -u [URL]
     ```
 
 ### Batch File:
 
-    ```bash
-    node <script-name> --batch [FILE_PATH]
+    ```
+    node main.js --batch [FILE_PATH]
     ```
 
 or
 
-    ```bash
-    node <script-name> -b [FILE_PATH]
+    ```
+    node main.js -b [FILE_PATH]
     ```
 
 **Batch File Format**: The batch file should be formatted as:
