@@ -1,19 +1,17 @@
 const fs = require("fs");
 const path = require("path");
-const { getSiteUrl, getCurrentTimestamp } = require('../utils/sanitizers');
-
-const siteUrl = getSiteUrl();
+const { getCurrentTimestamp } = require('../utils/sanitizers');
 
 /**
  * Creates a new markdown file with a custom front matter.
  * The file name is generated using the sanitized site URL and the current timestamp.
  * 
- * @param {string} cleanSiteUrl - The sanitized site URL.
+ * @param {string} siteUrl - The site URL.
  * @returns {string} The path to the created markdown file.
  */
-const createNewMarkdownFile = async (cleanSiteUrl) => {
+const createNewMarkdownFile = async (siteUrl) => {
   const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-  const markdownFilePath = path.join(__dirname, '../markdown', `${cleanSiteUrl}_${timestamp}.md`);
+  const markdownFilePath = path.join(__dirname, '../markdown', `${siteUrl.domain}_${timestamp}.md`);
 
   const markdownDir = path.resolve(__dirname, '../markdown');
   const logoPath = path.join(__dirname, '../assets', 'logo.svg');
@@ -105,7 +103,6 @@ ${pageUrl}
   }
 };
 
-
 /**
  * Generates and appends a markdown slide showing comparison between JS on and off.
  * 
@@ -114,17 +111,26 @@ ${pageUrl}
  * @param {string} pageUrl - URL of the page.
  * @param {string} screenshotPath1 - Path to the screenshot with JS on.
  * @param {string} screenshotPath2 - Path to the screenshot with JS off.
+ * @param {string} diffImagePath - Path to the diff image (comparison result).
  * @param {string} markdownFilePath - Path to the markdown file where the slide will be appended.
  */
-const generateMarkdownSlideJSonoff = async (headline, pageType, pageUrl, screenshotPath1, screenshotPath2, markdownFilePath) => {
+const generateMarkdownSlideJSonoff = async (headline, pageType, pageUrl, screenshotPath1, screenshotPath2, diffImagePath, markdownFilePath) => {
   try {
     const markdownDir = path.resolve(__dirname, '../markdown');
     const relativeScreenshotPath1 = path.relative(markdownDir, screenshotPath1);
     const relativeScreenshotPath2 = path.relative(markdownDir, screenshotPath2);
-    
-    const markdownSlide = 
-    
-`
+    const relativeDiffImagePath = diffImagePath ? path.relative(markdownDir, diffImagePath) : null;
+
+    let diffImageMarkdown = "";
+    if (relativeDiffImagePath) {
+      diffImageMarkdown = 
+      `<div style="width: 20%;">
+      <h2>Difference</h2>
+      <img src="${relativeDiffImagePath}"/>
+    </div>`;
+    }
+
+    const markdownSlide = `
 <!-- 
 _class: default 
 _header: '${pageType} (${pageUrl})'
@@ -141,7 +147,8 @@ _header: '${pageType} (${pageUrl})'
       <h2>JS off</h2>
       <img src="${relativeScreenshotPath2}"/>
     </div>
-    <div style="width: 60%;"></div>
+    ${diffImageMarkdown}
+    <div style="width: ${relativeDiffImagePath ? '40%' : '60%'};"></div>
 </div>
 
 ---
@@ -153,6 +160,7 @@ _header: '${pageType} (${pageUrl})'
     console.error(`Failed to generate markdown slide. ${error}`);
   }
 };
+
 
 
 /**

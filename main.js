@@ -1,3 +1,5 @@
+global.siteUrl = {};
+
 const fs = require("fs");
 const path = require("path");
 const puppeteer = require("puppeteer");
@@ -53,6 +55,8 @@ if (argv.url || argv.u) {
   process.exit(1);
 }
 
+global.siteUrl = getSiteUrl(pages);
+
 (async () => {
   let browser;
   try {
@@ -99,15 +103,14 @@ if (argv.url || argv.u) {
   }
 
   let isFirstPage = true;
-  const siteUrl = getSiteUrl();
-  const markdownFilePath = await markdown.createNewMarkdownFile(siteUrl.domain);
+  const markdownFilePath = await markdown.createNewMarkdownFile(global.siteUrl);
 
   for (const [pageType, url] of Object.entries(pages)) {
     await markdown.generateMarkdownSubTitleSlide(pageType, url, markdownFilePath);
-    //const pagespeedData = await pagespeedTest(browser, pageType, url, siteUrl, isFirstPage, markdownFilePath);
+    //const pagespeedData = await pagespeedTest(browser, pageType, url, global.siteUrl, isFirstPage, markdownFilePath);
     const jsOnOffData = await jsOnOffTest(browser, pageType, url, markdownFilePath);
     //const mobileFriendlyData = await mobileFriendlyTest(browser, pageType, url, markdownFilePath);
-    //const urlInspectionData = await urlInspectionTest(browser, pageType, url, siteUrl, markdownFilePath);
+    //const urlInspectionData = await urlInspectionTest(browser, pageType, url, global.siteUrl, markdownFilePath);
     isFirstPage = false;
   }
 

@@ -1,6 +1,3 @@
-const config = require('../config');
-const pages = config.pages;
-
 /**
  * Retrieves the base URL of the first page in the 'pages' object. 
  * The returned object contains both the full and sanitized versions of the URL.
@@ -9,7 +6,7 @@ const pages = config.pages;
  *   - full {string}: The full base URL with a trailing slash, if needed.
  *   - domain {string}: The sanitized version of the URL, with protocol and www. removed, if present.
  */
-const getSiteUrl = () => {
+const getSiteUrl = (pages) => {
   const firstPageUrl = Object.values(pages)[0];
   let siteUrlBase = new URL(firstPageUrl).origin;
   // Add a trailing slash to siteUrl if it doesn't have one

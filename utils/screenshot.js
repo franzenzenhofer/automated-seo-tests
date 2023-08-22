@@ -1,5 +1,4 @@
 const path = require('path');
-const { getSiteUrl } = require('../utils/sanitizers');
 
 /**
  * Asynchronously captures a screenshot of a Puppeteer Page or ElementHandle, with custom options.
@@ -13,8 +12,6 @@ const { getSiteUrl } = require('../utils/sanitizers');
  */
 async function captureScreenshot(elementOrPage, screenshotXPath, screenshotNamePrefix, padding = 5, maxHeight = 1200) {
   let screenshotHolder, screenshotPath;
-
-  const siteUrl = getSiteUrl();
 
   try {
     // If a Page object is passed and an XPath is provided, find the ElementHandle for the XPath on the page
@@ -30,7 +27,7 @@ async function captureScreenshot(elementOrPage, screenshotXPath, screenshotNameP
     }
 
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-    const screenshotName = `${siteUrl.domain}_${screenshotNamePrefix}_${timestamp}`;
+    const screenshotName = `${global.siteUrl.domain}_${screenshotNamePrefix}_${timestamp}`;
     screenshotPath = path.resolve(__dirname, '../screenshots', `${screenshotName}.png`);
 
     // If an ElementHandle was passed or found, capture a screenshot of the element

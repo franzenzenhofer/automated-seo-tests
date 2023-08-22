@@ -1,8 +1,32 @@
+const path = require('path');
+const fs = require('fs');
+const PNG = require('pngjs').PNG;
+const pixelmatch = require('pixelmatch');
+
 const { captureScreenshot } = require('../utils/screenshot');
 const { sanitizeString } = require('../utils/sanitizers');
 const markdown = require('../utils/markdown');
 
+const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+
 let result;
+
+async function compareScreenshots(imgPath1, imgPath2, outputPath) {
+    const img1 = PNG.sync.read(fs.readFileSync(imgPath1));
+    const img2 = PNG.sync.read(fs.readFileSync(imgPath2));
+
+    const { width, height } = img1;
+    const diff = new PNG({ width, height });
+
+    const numDiffPixels = pixelmatch(img1.data, img2.data, diff.data, width, height, { threshold: 0.1 });
+
+    if (numDiffPixels > 0) {
+        diff.pack().pipe(fs.createWriteStream(outputPath));
+        return outputPath;
+    }
+
+    return null;
+}
 
 const iPhone13 = {
   name: 'iPhone 13',
@@ -44,12 +68,11 @@ module.exports = async (browser, pageType, url, markdownFilePath) => {
   // Run the test with JS disabled
   const jsOffResults = await runTest(page, url, false, pageType);
 
-  await markdown.generateMarkdownSlideJSonoff('JS on/off', pageType, url, jsOnResults.screenshotPath, jsOffResults.screenshotPath, markdownFilePath);
+  const diffImagePath = path.join(__dirname, '..', 'screenshots', `jsonoff_diff_${sanitizeString(pageType)}__${timestamp}.png`);
+  const diffResult = await compareScreenshots(jsOnResults.screenshotPath, jsOffResults.screenshotPath, diffImagePath);
+
+  console.log(diffResult);
+  await markdown.generateMarkdownSlideJSonoff('JS on/off', pageType, url, jsOnResults.screenshotPath, jsOffResults.screenshotPath, diffResult, markdownFilePath);
 
   await page.close();
-
-  return {
-    jsOnResults: jsOnResults,
-    jsOffResults: jsOffResults,
-  };
 };
