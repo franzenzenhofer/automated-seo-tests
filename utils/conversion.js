@@ -21,10 +21,10 @@ function convertMarkdown(markdownFilePath) {
         if (format === 'pdf') {
             cmd += " --pdf";
         }
+        console.log(`Converting to ${format} format.`);
 
-        console.log(`Attempting to convert to ${format} format.`);
         try {
-            const output = execSync(cmd, { shell: '/bin/zsh', timeout: 10000 });
+            const output = execSync(cmd, { shell: '/bin/zsh', timeout: 60000 });
             console.log(output.toString());
             console.log(`Converted markdown to ${format} successfully!`);
             outputPaths.push(outputPath);

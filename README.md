@@ -102,12 +102,19 @@ The results of each test are saved in the Markdown format. These Markdown files 
 
 The conversion of Markdown files to HTML and PDF formats is powered by Marp CLI. Our tool employs the `convertMarkdown` utility, which can be found in `./utils/conversion`, to leverage Marp's capabilities and transform Markdown documents seamlessly.
 
-If you wish to perform the conversion manually, you can execute:
+### Manual Conversion
 
-```javascript
-const { convertMarkdown } = require('./utils/conversion');
-const markdownFilePath = "<path_to_your_markdown_file>";
-convertMarkdown(markdownFilePath);
+To manually convert a specific Markdown file to HTML and PDF, use the `--convert` or `-c` option followed by the path to the Markdown file:
+
+
+```bash
+node main.js --convert path/to/your/markdown/file.md
+```
+
+or
+
+```bash
+node main.js -c path/to/your/markdown/file.md
 ```
 
 Replace <path_to_your_markdown_file> with the appropriate path.

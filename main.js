@@ -33,6 +33,23 @@ directories.forEach(dir => {
 
 // Parse command line arguments.
 const argv = yargs(hideBin(process.argv)).argv;
+
+// Manual conversion
+if (argv.convert || argv.c) {
+  const mdFilePath = argv.convert || argv.c;
+  if (fs.existsSync(mdFilePath)) {
+      try {
+          const outputPaths = convertMarkdown(mdFilePath);
+          console.log('Conversion completed. Files saved at:', outputPaths);
+      } catch (error) {
+          console.error('Error during manual conversion:', error);
+      }
+  } else {
+      console.error(`File ${mdFilePath} does not exist.`);
+  }
+  process.exit();
+}
+
 let pages = {};
 
 if (argv.url || argv.u) {
