@@ -32,7 +32,7 @@ _class: title
 
 `;
 
-  fs.writeFileSync(markdownFilePath, frontMatter); // Create a file with front matter
+  fs.writeFileSync(markdownFilePath, frontMatter);
   return markdownFilePath;
 };
 
