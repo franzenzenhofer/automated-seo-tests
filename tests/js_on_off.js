@@ -70,7 +70,6 @@ module.exports = async (browser, pageType, url, markdownFilePath) => {
   // Run the test with JS disabled
   const jsOffResults = await runTest(page, url, false, pageType);
 
-  //const diffImagePath = path.join(__dirname, '..', 'screenshots', `jsonoff_diff_${sanitizeString(pageType)}__${timestamp}.png`);
   const diffImagePath = path.join(process.cwd(), topDirectory, 'screenshots', `jsonoff_diff_${sanitizeString(pageType)}__${timestamp}.png`);
   const diffResult = await compareScreenshots(jsOnResults.screenshotPath, jsOffResults.screenshotPath, diffImagePath);
 
