@@ -4,7 +4,7 @@ const path = require('path');
 // This module contains utility functions related to managing cookies.
 
 // Path where cookies will be saved.
-const cookiesPath = path.join(__dirname, '..', 'cookies.json');
+const cookiesPath = path.join(process.cwd(), '_seo-tests-output', 'cookies.json');
 
 /**
  * Saves cookies from a Puppeteer page to a file.

@@ -2,6 +2,8 @@ const fs = require("fs");
 const path = require("path");
 const { getCurrentTimestamp } = require('../utils/sanitizers');
 
+const topDirectory = '_seo-tests-output'; 
+
 /**
  * Creates a new markdown file with a custom front matter.
  * The file name is generated using the sanitized site URL and the current timestamp.
@@ -11,11 +13,11 @@ const { getCurrentTimestamp } = require('../utils/sanitizers');
  */
 const createNewMarkdownFile = async (siteUrl) => {
   const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-  const markdownFilePath = path.join(__dirname, '../markdown', `${siteUrl.domain}_${timestamp}.md`);
+  const markdownFilePath = path.join(process.cwd(), topDirectory, 'markdown', `${siteUrl.domain}_${timestamp}.md`);
 
-  const markdownDir = path.resolve(__dirname, '../markdown');
-  const logoPath = path.join(__dirname, '../assets', 'logo.svg');
-  const relativelogoPath = path.relative(markdownDir, logoPath);
+  const markdownDir = path.resolve(process.cwd(), topDirectory, 'markdown');
+  //const logoPath = path.join(__dirname, '../assets', 'logo.svg');
+  //const relativelogoPath = path.relative(markdownDir, logoPath);
 
   const frontMatter = 
 `---
@@ -48,7 +50,7 @@ _class: title
  */
 const generateMarkdownSlide = async (headline, pageType, pageUrl, screenshotPath, screenshotUrl, markdownFilePath) => {
   try {
-    const markdownDir = path.resolve(__dirname, '../markdown');
+    const markdownDir = path.resolve(process.cwd(), topDirectory, 'markdown');
     const relativeScreenshotPath = path.relative(markdownDir, screenshotPath);
     const markdownSlide = 
     
@@ -116,7 +118,7 @@ ${pageUrl}
  */
 const generateMarkdownSlideJSonoff = async (headline, pageType, pageUrl, screenshotPath1, screenshotPath2, diffImagePath, markdownFilePath) => {
   try {
-    const markdownDir = path.resolve(__dirname, '../markdown');
+    const markdownDir = path.resolve(process.cwd(), topDirectory, 'markdown');
     const relativeScreenshotPath1 = path.relative(markdownDir, screenshotPath1);
     const relativeScreenshotPath2 = path.relative(markdownDir, screenshotPath2);
     const relativeDiffImagePath = diffImagePath ? path.relative(markdownDir, diffImagePath) : null;
@@ -176,7 +178,7 @@ _header: '${pageType} (${pageUrl})'
  */
 const generateMarkdownInspectAndMobileFriendly = async (headline, pageType, pageUrl, screenshotPath1, screenshotPath2, testUrl, markdownFilePath) => {
   try {
-    const markdownDir = path.resolve(__dirname, '../markdown');
+    const markdownDir = path.resolve(process.cwd(), topDirectory, 'markdown');
     const relativeScreenshotPath1 = path.relative(markdownDir, screenshotPath1);
     const relativeScreenshotPath2 = path.relative(markdownDir, screenshotPath2);
     

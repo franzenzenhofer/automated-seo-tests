@@ -1,6 +1,8 @@
 const { execSync } = require('child_process');
 const path = require('path');
 
+const topDirectory = '_seo-tests-output';
+
 /**
  * Converts a given markdown file to specified formats (HTML and PDF).
  * Uses Marp CLI for the conversion.
@@ -13,7 +15,7 @@ function convertMarkdown(markdownFilePath) {
     const outputPaths = [];
 
     for (const format of formats) {
-        const outputPath = path.join(__dirname, '..', 'results', path.basename(markdownFilePath).replace('.md', `.${format}`));
+        const outputPath = path.join(process.cwd(), topDirectory, 'results', path.basename(markdownFilePath).replace('.md', `.${format}`));
         const themePath = path.join(__dirname, '..', 'assets', 'theme.css');
         
         let cmd = `npx @marp-team/marp-cli@latest "${markdownFilePath}" --allow-local-files --html --theme-set "${themePath}" --theme f19n-theme -o "${outputPath}"`;
