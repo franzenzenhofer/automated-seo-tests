@@ -1,5 +1,7 @@
 const path = require('path');
 
+const topDirectory = '_seo-tests-output';
+
 /**
  * Asynchronously captures a screenshot of a Puppeteer Page or ElementHandle, with custom options.
  * 
@@ -28,7 +30,8 @@ async function captureScreenshot(elementOrPage, screenshotXPath, screenshotNameP
 
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
     const screenshotName = `${global.siteUrl.domain}_${screenshotNamePrefix}_${timestamp}`;
-    screenshotPath = path.resolve(__dirname, '../screenshots', `${screenshotName}.png`);
+    //screenshotPath = path.resolve(__dirname, '../screenshots', `${screenshotName}.png`);
+    screenshotPath = path.resolve(process.cwd(), topDirectory, 'screenshots', `${screenshotName}.png`);
 
     // If an ElementHandle was passed or found, capture a screenshot of the element
     if (screenshotHolder.constructor.name === 'ElementHandle' || screenshotHolder.constructor.name === 'CDPElementHandle') {

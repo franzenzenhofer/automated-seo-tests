@@ -22,13 +22,21 @@ const markdown = require('./utils/markdown');
 const { convertMarkdown } = require('./utils/conversion');
 
 
-const directories = ['screenshots', 'markdown', 'results'];
+const topDirectory = '_seo-tests-output';
+const subDirectories = ['screenshots', 'markdown', 'results'];
 
-directories.forEach(dir => {
-  const dirPath = path.join(__dirname, dir);
-  if (!fs.existsSync(dirPath)) {
-    fs.mkdirSync(dirPath);
-  }
+// Ensure the top directory exists
+const topDirPath = path.join(process.cwd(), topDirectory);
+if (!fs.existsSync(topDirPath)) {
+    fs.mkdirSync(topDirPath);
+}
+
+// Ensure subdirectories exist within the top directory
+subDirectories.forEach(dir => {
+    const dirPath = path.join(topDirPath, dir);
+    if (!fs.existsSync(dirPath)) {
+        fs.mkdirSync(dirPath);
+    }
 });
 
 // Parse command line arguments.

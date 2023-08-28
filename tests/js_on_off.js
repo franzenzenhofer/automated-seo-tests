@@ -7,6 +7,8 @@ const { captureScreenshot } = require('../utils/screenshot');
 const { sanitizeString } = require('../utils/sanitizers');
 const markdown = require('../utils/markdown');
 
+const topDirectory = '_seo-tests-output';
+
 const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
 
 let result;
@@ -68,7 +70,8 @@ module.exports = async (browser, pageType, url, markdownFilePath) => {
   // Run the test with JS disabled
   const jsOffResults = await runTest(page, url, false, pageType);
 
-  const diffImagePath = path.join(__dirname, '..', 'screenshots', `jsonoff_diff_${sanitizeString(pageType)}__${timestamp}.png`);
+  //const diffImagePath = path.join(__dirname, '..', 'screenshots', `jsonoff_diff_${sanitizeString(pageType)}__${timestamp}.png`);
+  const diffImagePath = path.join(process.cwd(), topDirectory, 'screenshots', `jsonoff_diff_${sanitizeString(pageType)}__${timestamp}.png`);
   const diffResult = await compareScreenshots(jsOnResults.screenshotPath, jsOffResults.screenshotPath, diffImagePath);
 
   console.log(diffResult);

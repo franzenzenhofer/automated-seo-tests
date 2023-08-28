@@ -2,6 +2,8 @@ const path = require('path');
 const { sanitizeString } = require('../utils/sanitizers');
 const markdown = require('../utils/markdown');
 
+const topDirectory = '_seo-tests-output';
+
 const pagespeedUrl = 'https://pagespeed.web.dev/analysis?url=';
 
 const runPageSpeedTest = async (page, url) => {
@@ -81,7 +83,9 @@ module.exports = async (browser, pageType, url, siteUrl, isFirstPage, markdownFi
 
     const timestamp = new Date().toISOString().replace(/[:.-]/g, '_');
     const screenshotName = `${siteUrl.domain}_psi_${sanitizeString(pageType)}_${timestamp}`;
-    const filepath = path.resolve(__dirname, '../screenshots', `${screenshotName}.png`);
+    //const filepath = path.resolve(__dirname, '../screenshots', `${screenshotName}.png`);
+    const filepath = path.resolve(process.cwd(), topDirectory, 'screenshots', `${screenshotName}.png`);
+    
 
     await takeScreenshot(page, filepath);
 
