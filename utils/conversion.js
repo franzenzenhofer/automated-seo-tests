@@ -15,7 +15,6 @@ function convertMarkdown(markdownFilePath) {
     const outputPaths = [];
 
     for (const format of formats) {
-        //const outputPath = path.join(__dirname, '..', 'results', path.basename(markdownFilePath).replace('.md', `.${format}`));
         const outputPath = path.join(process.cwd(), topDirectory, 'results', path.basename(markdownFilePath).replace('.md', `.${format}`));
         const themePath = path.join(__dirname, '..', 'assets', 'theme.css');
         

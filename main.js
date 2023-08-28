@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 global.siteUrl = {};
 
 const fs = require("fs");
