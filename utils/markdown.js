@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const { getCurrentTimestamp } = require('../utils/sanitizers');
 
-const topDirectory = '_seo-tests-output'; 
+const topDirectory = '_seo-tests-output';
 
 /**
  * Creates a new markdown file with a custom front matter.
@@ -19,8 +19,8 @@ const createNewMarkdownFile = async (siteUrl) => {
   //const logoPath = path.join(__dirname, '../assets', 'logo.svg');
   //const relativelogoPath = path.relative(markdownDir, logoPath);
 
-  const frontMatter = 
-`---
+  const frontMatter =
+    `---
 theme: f19n-theme
 paginate: true
 footer: 'Automated SEO Test Report for ${siteUrl.full} - Generated: ${getCurrentTimestamp()} - Powered by [https://www.fullstackoptimization.com/](https://www.fullstackoptimization.com/)'
@@ -52,9 +52,9 @@ const generateMarkdownSlide = async (headline, pageType, pageUrl, screenshotPath
   try {
     const markdownDir = path.resolve(process.cwd(), topDirectory, 'markdown');
     const relativeScreenshotPath = path.relative(markdownDir, screenshotPath);
-    const markdownSlide = 
-    
-`
+    const markdownSlide =
+
+      `
 <!-- 
 _class: default 
 _header: ${pageType} (${pageUrl})
@@ -85,9 +85,9 @@ _header: ${pageType} (${pageUrl})
  */
 const generateMarkdownSubTitleSlide = async (pageType, pageUrl, markdownFilePath) => {
   try {
-    const markdownSlide = 
-    
-`
+    const markdownSlide =
+
+      `
 <!-- 
 _class: title 
 -->
@@ -125,8 +125,8 @@ const generateMarkdownSlideJSonoff = async (headline, pageType, pageUrl, screens
 
     let diffImageMarkdown = "";
     if (relativeDiffImagePath) {
-      diffImageMarkdown = 
-      `<div style="width: 20%;">
+      diffImageMarkdown =
+        `<div style="width: 20%;">
       <h2>Difference</h2>
       <img src="${relativeDiffImagePath}"/>
     </div>`;
@@ -148,8 +148,7 @@ _header: '${pageType} (${pageUrl})'
     <div style="width: 20%;">
       <h2>JS off</h2>
       <img src="${relativeScreenshotPath2}"/>
-    </div>
-    ${diffImageMarkdown}
+    </div>${diffImageMarkdown}
     <div style="width: ${relativeDiffImagePath ? '40%' : '60%'};"></div>
 </div>
 
@@ -157,7 +156,7 @@ _header: '${pageType} (${pageUrl})'
 
 `;
 
-    fs.appendFileSync(markdownFilePath, markdownSlide); 
+    fs.appendFileSync(markdownFilePath, markdownSlide);
   } catch (error) {
     console.error(`Failed to generate markdown slide. ${error}`);
   }
@@ -181,10 +180,10 @@ const generateMarkdownInspectAndMobileFriendly = async (headline, pageType, page
     const markdownDir = path.resolve(process.cwd(), topDirectory, 'markdown');
     const relativeScreenshotPath1 = path.relative(markdownDir, screenshotPath1);
     const relativeScreenshotPath2 = path.relative(markdownDir, screenshotPath2);
-    
-    const markdownSlide = 
-    
-`
+
+    const markdownSlide =
+
+      `
 <!-- 
 _class: default 
 _header: '${pageType} (${pageUrl})'
