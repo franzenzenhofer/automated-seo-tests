@@ -50,6 +50,10 @@ section.title h1 {
   font-size: 3em;
 }
 
+section.intro ul {
+  font-size: 40px;
+}
+
 section[data-paginate="true"]:after {
   bottom: 14px !important;
   color: #434343 !important;

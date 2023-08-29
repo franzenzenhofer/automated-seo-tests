@@ -17,7 +17,7 @@ const mobileFriendlyTest = require("./tests/mobile_friendly");
 const urlInspectionTest = require("./tests/url_inspection");
 
 // Importing utilities.
-const { saveCookies, loadCookies } = require('./utils/cookies');
+const { saveCookies, loadCookies, isLoggedIn } = require('./utils/cookies');
 const { sleep } = require('./utils/navigation');
 const { getSiteUrl } = require('./utils/sanitizers');
 const markdown = require('./utils/markdown');
@@ -101,31 +101,34 @@ global.siteUrl = getSiteUrl(pages);
 
   try {
     await loadCookies(page);
-    await sleep(2000);
+    const loggedIn = await isLoggedIn(page);
+    if (!loggedIn) {
+      console.log('Cookies are outdated or invalid.');
+      throw new Error('Cookies are outdated or invalid.');
+    }
   } catch (error) {
-    if (error.message === 'No cookies file found.') {
+    if (error.message === 'No cookies file found.' || error.message === 'Cookies are outdated or invalid.') {
       console.log('Navigating to Google sign in page.');
       await page.goto('https://accounts.google.com/signin');
-
+  
       const rl = readline.createInterface({
         input: process.stdin,
         output: process.stdout
       });
-
+  
       await new Promise((resolve, reject) => {
         rl.question("Please login to your Google account in the browser then press Enter to continue...", function (answer) {
           resolve();
         });
       });
-
+  
       rl.close();
-
+  
       await saveCookies(page);
-
       await sleep(2000);
     } else {
       console.error(`Error loading cookies: ${error}`);
-      process.exit(1);
+      process.exit(1); // or whatever your error handling strategy is
     }
   }
 
@@ -135,9 +138,9 @@ global.siteUrl = getSiteUrl(pages);
   for (const [pageType, url] of Object.entries(pages)) {
     await markdown.generateMarkdownSubTitleSlide(pageType, url, markdownFilePath);
     //const pagespeedData = await pagespeedTest(browser, pageType, url, global.siteUrl, isFirstPage, markdownFilePath);
-    const jsOnOffData = await jsOnOffTest(browser, pageType, url, markdownFilePath);
+    //const jsOnOffData = await jsOnOffTest(browser, pageType, url, markdownFilePath);
     //const mobileFriendlyData = await mobileFriendlyTest(browser, pageType, url, markdownFilePath);
-    //const urlInspectionData = await urlInspectionTest(browser, pageType, url, global.siteUrl, markdownFilePath);
+    const urlInspectionData = await urlInspectionTest(browser, pageType, url, global.siteUrl, markdownFilePath);
     isFirstPage = false;
   }
 
@@ -146,7 +149,7 @@ global.siteUrl = getSiteUrl(pages);
   try {
     const outputPaths = await convertMarkdown(markdownFilePath);
     console.log('Conversion completed. Files saved at:', outputPaths);
-    sendReport([outputPaths.pdf], 'holger.guggi@fullstackoptimization.com');
+    //sendReport([outputPaths.pdf], 'holger.guggi@fullstackoptimization.com');
   } catch (error) {
     console.error('Error during conversion:', error);
   }

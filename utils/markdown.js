@@ -32,6 +32,20 @@ _class: title
 
 ---
 
+<!-- 
+_class: intro
+-->
+
+# 4 SEO Tests to do 80% of technical onpage/onsite SEO right!
+- Page Speed Insights: minimum score of 80 (still orange) / preferrably 90 (green) + sensemaking screenshots for desktop and mobile!
+- Google Mobile Friendly Test: Green + sensemaking screenshot!
+- “JS turned off” Test:
+  - Above fold and main content must be visible on the site with JS turned off!
+  - Interlinking must work with JS turned off! (Visible links must be links.)
+- Google Search Console -> Inspect URL -> Test Live URL -> View Tested Page -> Screenshot must show rendered page! (Images below fold (non-visible) might get lazy loaded)
+
+---
+
 `;
 
   fs.writeFileSync(markdownFilePath, frontMatter);
