@@ -100,3 +100,20 @@ footer img {
 footer a {
   padding: 0 5px;
 }
+
+.slideInner {
+  display: flex;
+  justify-content: start;  /* This will align the columns to the left */
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  flex: 0 1 auto;
+  margin-right: 10px; 
+}
+
+.col:last-child {
+  margin-left: 20px;
+  margin-right: 0;
+}
