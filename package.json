@@ -16,6 +16,7 @@
     "axios": "^1.5.0",
     "debug": "^4.3.4",
     "dotenv": "^16.3.1",
+    "markdown-it-container": "^3.0.0",
     "node-fetch": "^3.3.1",
     "nodemailer": "^6.9.4",
     "pixelmatch": "^5.3.0",

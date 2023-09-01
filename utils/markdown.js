@@ -53,45 +53,7 @@ _class: intro
 };
 
 /**
- * Generates and appends a markdown slide to a markdown file.
- * 
- * @param {string} headline - Slide headline.
- * @param {string} pageType - Type of the page.
- * @param {string} pageUrl - URL of the page.
- * @param {string} screenshotPath - Path to the screenshot.
- * @param {string} screenshotUrl - URL of the screenshot.
- * @param {string} markdownFilePath - Path to the markdown file where the slide will be appended.
- */
-const generateMarkdownSlide = async (headline, pageType, pageUrl, screenshotPath, screenshotUrl, markdownFilePath) => {
-  try {
-    const markdownDir = path.resolve(process.cwd(), topDirectory, 'markdown');
-    const relativeScreenshotPath = path.relative(markdownDir, screenshotPath);
-    const markdownSlide =
-
-      `
-<!-- 
-_class: default 
-_header: ${pageType} (${pageUrl})
--->
-
-# ${headline}
-
-![w:auto h:auto](${relativeScreenshotPath})
-[${screenshotUrl}](${screenshotUrl})
-
----
-
-`;
-
-    fs.appendFileSync(markdownFilePath, markdownSlide); // append the markdown slide to the file
-  } catch (error) {
-    console.error(`Failed to generate markdown slide. ${error}`);
-  }
-};
-
-
-/**
- * Generates and appends a markdown slide showing comparison between JS on and off.
+ * Generates and appends a markdown slide for separating page types.
  * 
  * @param {string} pageType - Type of the page.
  * @param {string} pageUrl - URL of the page.
@@ -120,6 +82,56 @@ ${pageUrl}
 };
 
 /**
+ * Generates and appends a markdown slide to a markdown file.
+ * 
+ * @param {string} headline - Slide headline.
+ * @param {string} pageType - Type of the page.
+ * @param {string} pageUrl - URL of the page.
+ * @param {string} screenshotPath - Path to the screenshot.
+ * @param {string} screenshotUrl - URL of the screenshot.
+ * @param {string} markdownFilePath - Path to the markdown file where the slide will be appended.
+ */
+const generateMarkdownSlide = async (headline, pageType, pageUrl, screenshotPath, testUrl, markdownFilePath) => {
+  try {
+    const markdownDir = path.resolve(process.cwd(), topDirectory, 'markdown');
+    const relativeScreenshotPath = path.relative(markdownDir, screenshotPath);
+    const markdownSlide =
+
+      `
+<!-- 
+_class: default 
+_header: ${pageType} (${pageUrl})
+-->
+
+# ${headline}
+
+:::: slideInner
+
+:::col
+![screenshot](${relativeScreenshotPath})
+:::
+
+:::col
+## IS
+## SHOULD
+:::
+
+::::
+
+[${testUrl}](${testUrl})
+
+---
+
+`;
+
+    fs.appendFileSync(markdownFilePath, markdownSlide); // append the markdown slide to the file
+  } catch (error) {
+    console.error(`Failed to generate markdown slide. ${error}`);
+  }
+};
+
+
+/**
  * Generates and appends a markdown slide showing comparison between JS on and off.
  * 
  * @param {string} headline - Slide headline.
@@ -139,11 +151,12 @@ const generateMarkdownSlideJSonoff = async (headline, pageType, pageUrl, screens
 
     let diffImageMarkdown = "";
     if (relativeDiffImagePath) {
-      diffImageMarkdown =
-        `<div style="width: 20%;">
-      <h2>Difference</h2>
-      <img src="${relativeDiffImagePath}"/>
-    </div>`;
+      diffImageMarkdown = `
+:::col
+## Difference
+![screenshot](${relativeDiffImagePath})
+:::
+`;
     }
 
     const markdownSlide = `
@@ -154,17 +167,26 @@ _header: '${pageType} (${pageUrl})'
 
 # ${headline}
 
-<div style="display: flex; justify-content: space-between;">
-    <div style="width: 20%;">
-      <h2>JS on</h2>
-      <img src="${relativeScreenshotPath1}"/>
-    </div>
-    <div style="width: 20%;">
-      <h2>JS off</h2>
-      <img src="${relativeScreenshotPath2}"/>
-    </div>${diffImageMarkdown}
-    <div style="width: ${relativeDiffImagePath ? '40%' : '60%'};"></div>
-</div>
+:::: slideInner
+
+:::col
+## JS on
+![screenshot](${relativeScreenshotPath1})
+:::
+
+:::col
+## JS off
+![screenshot](${relativeScreenshotPath2})
+:::
+
+${diffImageMarkdown}
+
+:::col
+## IS
+## SHOULD
+:::
+
+::::
 
 ---
 
@@ -205,16 +227,24 @@ _header: '${pageType} (${pageUrl})'
 
 # ${headline}
 
-<div style="display: flex; justify-content: space-between;">
-    <div style="width: 60%;">
-      <img src="${relativeScreenshotPath1}"/>
-      <a href="${testUrl}">${testUrl}</a>
-    </div>
-    <div style="width: 20%;">
-      <img src="${relativeScreenshotPath2}"/>
-    </div>
-    <div style="width: 20%;"></div>
-</div>
+:::: slideInner
+
+:::col
+![screenshot](${relativeScreenshotPath1})
+:::
+
+:::col
+![screenshot](${relativeScreenshotPath2})
+:::
+
+:::col
+## IS
+## SHOULD
+:::
+
+::::
+
+[${testUrl}](${testUrl})
 
 ---
 
