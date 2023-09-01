@@ -2,6 +2,7 @@ const { execSync } = require('child_process');
 const path = require('path');
 
 const topDirectory = '_seo-tests-output';
+const enginePath = path.join(__dirname, 'engine.js');
 
 /**
  * Converts a given markdown file to specified formats (HTML and PDF).
@@ -18,7 +19,7 @@ function convertMarkdown(markdownFilePath) {
         const outputPath = path.join(process.cwd(), topDirectory, 'results', path.basename(markdownFilePath).replace('.md', `.${format}`));
         const themePath = path.join(__dirname, '..', 'assets', 'theme.css');
         
-        let cmd = `npx @marp-team/marp-cli@latest "${markdownFilePath}" --allow-local-files --html --theme-set "${themePath}" --theme f19n-theme -o "${outputPath}"`;
+        let cmd = `npx @marp-team/marp-cli@latest "${markdownFilePath}" --allow-local-files --html --theme-set "${themePath}" --theme f19n-theme -o "${outputPath}" --engine "${enginePath}"`;
         
         if (format === 'pdf') {
             cmd += " --pdf";
