@@ -76,7 +76,6 @@ header {
   border-bottom: 1px solid;
 }
 
-
 footer {
   display: flex;
   align-items: center;
@@ -101,9 +100,11 @@ footer a {
   padding: 0 5px;
 }
 
+/* markit-down-container */
+
 .slideInner {
   display: flex;
-  justify-content: start;  /* This will align the columns to the left */
+  justify-content: start;
 }
 
 .col {

@@ -75,7 +75,6 @@ module.exports = async (browser, pageType, url, markdownFilePath) => {
 
   console.log(diffResult);
   await markdown.generateMarkdownSlideJSonoff('JS on/off', pageType, url, jsOnResults.screenshotPath, jsOffResults.screenshotPath, diffResult, markdownFilePath);
-  await markdown.generateMarkdownSlideJSonoff_NEW('JS on/off', pageType, url, jsOnResults.screenshotPath, jsOffResults.screenshotPath, diffResult, markdownFilePath);
 
   await page.close();
 };

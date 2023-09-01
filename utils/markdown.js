@@ -53,44 +53,6 @@ _class: intro
 };
 
 /**
- * Generates and appends a markdown slide to a markdown file.
- * 
- * @param {string} headline - Slide headline.
- * @param {string} pageType - Type of the page.
- * @param {string} pageUrl - URL of the page.
- * @param {string} screenshotPath - Path to the screenshot.
- * @param {string} screenshotUrl - URL of the screenshot.
- * @param {string} markdownFilePath - Path to the markdown file where the slide will be appended.
- */
-const generateMarkdownSlide = async (headline, pageType, pageUrl, screenshotPath, screenshotUrl, markdownFilePath) => {
-  try {
-    const markdownDir = path.resolve(process.cwd(), topDirectory, 'markdown');
-    const relativeScreenshotPath = path.relative(markdownDir, screenshotPath);
-    const markdownSlide =
-
-      `
-<!-- 
-_class: default 
-_header: ${pageType} (${pageUrl})
--->
-
-# ${headline}
-
-![w:auto h:auto](${relativeScreenshotPath})
-[${screenshotUrl}](${screenshotUrl})
-
----
-
-`;
-
-    fs.appendFileSync(markdownFilePath, markdownSlide); // append the markdown slide to the file
-  } catch (error) {
-    console.error(`Failed to generate markdown slide. ${error}`);
-  }
-};
-
-
-/**
  * Generates and appends a markdown slide for separating page types.
  * 
  * @param {string} pageType - Type of the page.
@@ -120,61 +82,54 @@ ${pageUrl}
 };
 
 /**
- * Generates and appends a markdown slide showing comparison between JS on and off.
+ * Generates and appends a markdown slide to a markdown file.
  * 
  * @param {string} headline - Slide headline.
  * @param {string} pageType - Type of the page.
  * @param {string} pageUrl - URL of the page.
- * @param {string} screenshotPath1 - Path to the screenshot with JS on.
- * @param {string} screenshotPath2 - Path to the screenshot with JS off.
- * @param {string} diffImagePath - Path to the diff image (comparison result).
+ * @param {string} screenshotPath - Path to the screenshot.
+ * @param {string} screenshotUrl - URL of the screenshot.
  * @param {string} markdownFilePath - Path to the markdown file where the slide will be appended.
  */
-const generateMarkdownSlideJSonoff = async (headline, pageType, pageUrl, screenshotPath1, screenshotPath2, diffImagePath, markdownFilePath) => {
+const generateMarkdownSlide = async (headline, pageType, pageUrl, screenshotPath, testUrl, markdownFilePath) => {
   try {
     const markdownDir = path.resolve(process.cwd(), topDirectory, 'markdown');
-    const relativeScreenshotPath1 = path.relative(markdownDir, screenshotPath1);
-    const relativeScreenshotPath2 = path.relative(markdownDir, screenshotPath2);
-    const relativeDiffImagePath = diffImagePath ? path.relative(markdownDir, diffImagePath) : null;
+    const relativeScreenshotPath = path.relative(markdownDir, screenshotPath);
+    const markdownSlide =
 
-    let diffImageMarkdown = "";
-    if (relativeDiffImagePath) {
-      diffImageMarkdown =
-        `<div style="width: 20%;">
-      <h2>Difference</h2>
-      <img src="${relativeDiffImagePath}"/>
-    </div>`;
-    }
-
-    const markdownSlide = `
+      `
 <!-- 
 _class: default 
-_header: '${pageType} (${pageUrl})'
+_header: ${pageType} (${pageUrl})
 -->
 
 # ${headline}
 
-<div style="display: flex; justify-content: space-between;">
-    <div style="width: 20%;">
-      <h2>JS on</h2>
-      <img src="${relativeScreenshotPath1}"/>
-    </div>
-    <div style="width: 20%;">
-      <h2>JS off</h2>
-      <img src="${relativeScreenshotPath2}"/>
-    </div>${diffImageMarkdown}
-    <div style="width: ${relativeDiffImagePath ? '40%' : '60%'};"></div>
-</div>
+:::: slideInner
+
+:::col
+![screenshot](${relativeScreenshotPath})
+:::
+
+:::col
+## IS
+## SHOULD
+:::
+
+::::
+
+[${testUrl}](${testUrl})
 
 ---
 
 `;
 
-    fs.appendFileSync(markdownFilePath, markdownSlide);
+    fs.appendFileSync(markdownFilePath, markdownSlide); // append the markdown slide to the file
   } catch (error) {
     console.error(`Failed to generate markdown slide. ${error}`);
   }
 };
+
 
 /**
  * Generates and appends a markdown slide showing comparison between JS on and off.
@@ -187,7 +142,7 @@ _header: '${pageType} (${pageUrl})'
  * @param {string} diffImagePath - Path to the diff image (comparison result).
  * @param {string} markdownFilePath - Path to the markdown file where the slide will be appended.
  */
-const generateMarkdownSlideJSonoff_NEW = async (headline, pageType, pageUrl, screenshotPath1, screenshotPath2, diffImagePath, markdownFilePath) => {
+const generateMarkdownSlideJSonoff = async (headline, pageType, pageUrl, screenshotPath1, screenshotPath2, diffImagePath, markdownFilePath) => {
   try {
     const markdownDir = path.resolve(process.cwd(), topDirectory, 'markdown');
     const relativeScreenshotPath1 = path.relative(markdownDir, screenshotPath1);
@@ -212,7 +167,7 @@ _header: '${pageType} (${pageUrl})'
 
 # ${headline}
 
-:::: slideInner cols-4
+:::: slideInner
 
 :::col
 ## JS on
@@ -272,16 +227,24 @@ _header: '${pageType} (${pageUrl})'
 
 # ${headline}
 
-<div style="display: flex; justify-content: space-between;">
-    <div style="width: 60%;">
-      <img src="${relativeScreenshotPath1}"/>
-      <a href="${testUrl}">${testUrl}</a>
-    </div>
-    <div style="width: 20%;">
-      <img src="${relativeScreenshotPath2}"/>
-    </div>
-    <div style="width: 20%;"></div>
-</div>
+:::: slideInner
+
+:::col
+![screenshot](${relativeScreenshotPath1})
+:::
+
+:::col
+![screenshot](${relativeScreenshotPath2})
+:::
+
+:::col
+## IS
+## SHOULD
+:::
+
+::::
+
+[${testUrl}](${testUrl})
 
 ---
 
@@ -299,5 +262,4 @@ module.exports = {
   generateMarkdownSlideJSonoff,
   generateMarkdownInspectAndMobileFriendly,
   generateMarkdownSubTitleSlide,
-  generateMarkdownSlideJSonoff_NEW,
 };
