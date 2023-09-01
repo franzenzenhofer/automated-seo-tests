@@ -1,123 +1,131 @@
-# Web Assessment Automation Tool
+# Automated SEO Tests Automation Tool: Your Swiss Knife for Technical Onpage/Onsite SEO!
 
-This tool is designed to assess the performance and rendering of web pages using various Google tools. It ensures that pages render correctly, especially with JavaScript, and provides an in-depth analysis via different Google utilities.
+Get ahead of your competition by ensuring your website's performance and rendering are top-notch. This tool automates four pivotal SEO tests, helping you achieve 80% of the technical onpage/onsite SEO effectively. 
 
-## Prerequisites
+## Why These Four SEO Tests are Crucial 🎯
 
-- `node` and `npm`: Ensure you have Node.js and npm installed on your machine.
-- `puppeteer`: Required for headless browser automation.
-- `readline`: For reading user input from the command line.
-- `yargs`: To handle command line arguments.
+### 1. Page Speed Insights 
+Aim for a minimum score of 80 (still orange), preferably 90 (green). The tool provides insightful screenshots for both desktop and mobile views to guide your optimization strategies.
 
-## Tests
+### 2. Google Mobile Friendly Test
+Your website must pass this test with a green score. The tool also captures a meaningful screenshot to provide a holistic view of mobile compatibility.
 
-The tool performs the following tests on the web pages:
+### 3. "JavaScript Turned Off" Test
+Your website should:
 
-1. **Page Speed Test** (`pagespeed`): Analyzes the speed and performance of a webpage.
-2. **JavaScript On/Off Test** (`js_on_off`): Checks the webpage's rendering with JavaScript enabled and disabled.
-3. **Mobile Friendliness Test** (`mobile_friendly`): Assesses how well the webpage performs on mobile devices.
-4. **URL Inspection Test** (`url_inspection`): Inspects the URL for any anomalies and potential improvements.
+- Display above-the-fold and main content even with JavaScript turned off.
+- Ensure that visible links are operational without JavaScript.
 
-## Installation
+### 4. Google Search Console URL Inspection
+The tool performs a "Test Live URL" and captures a screenshot of the rendered page. Note that images below the fold may get lazy-loaded.
 
-1. Clone the repository:
+For an in-depth understanding of these tests and why they are essential, check out [Franz Enzenhofer's SEO Approach](https://www.fullstackoptimization.com/a/seo-basics).
 
-   ```
+## Prerequisites 🛠
+
+- `Node.js` and `npm`: If you're new to Node.js, download and install it from [nodejs.org](https://nodejs.org/).
+
+## Getting Started 🚀
+
+### Installation
+
+1. **Clone the Repository**  
+   ```bash
    git clone https://github.com/hg-f19n/automated-seo-tests.git
    ```
 
-2. Navigate to the directory:
-
+2. **Navigate to the Directory**  
+   ```bash
+   cd automated-seo-tests
    ```
-   cd seo-tests
+
+3. **Install Dependencies**  
+   ```bash
+   npm install
    ```
 
-3. Install the necessary packages:
+4. **Global Access**  
+   ```bash
+   npm link
+   ```
 
-    ```
-    npm install
-    ```
+   This creates a symlink for global command `seo-tests`.
 
-4. Run the tool:
+## Usage 🕹
 
-- For a single URL:
+### For the Single URL Aficionados
 
-    ```
-    node main.js --url [URL]
-    ```
-
-- For a batch file:
-
-    ```
-    node main.js --batch [FILE_PATH]
-    ```
-
-## Usage
-
-### Single URL:
+```bash
+seo-tests --url https://www.example.com
 ```
-node main.js --url https://www.example.com
+_or_
+```bash
+seo-tests -u https://www.example.com
 ```
 
-or
+### For the Batch Processing Enthusiasts
 
+```bash
+seo-tests --batch urls.txt
 ```
-node main.js -u https://www.example.com
-```
-
-### Batch File:
-
-```
-node main.js --batch urls.txt
+_or_
+```bash
+seo-tests -b urls.txt
 ```
 
-or
-
-```
-node main.js -b urls.txt
-```
-
-**Batch File Format**: The batch file should be formatted as:
-
+📝 **Batch File Format**:  
 ```
 PageType1: URL1
 PageType2: URL2
 ...
 ```
 
-### Google Account Authentication
+## Pro Tips 🌟
 
-On the first run, the tool will prompt the user to login to their Google account manually. After a successful login, cookies will be saved for subsequent runs, eliminating the need for manual login.
+- **First-Time Users**: You will be prompted to manually log into your Google account during the first run. Don't worry; your credentials will be saved for future use.
+  
+## Output 📊
 
-## Output
+- **Markdown Outputs**: Check `./markdown` directory.
+- **HTML and PDF Outputs**: Available in the `./results` directory.
 
-The results of each test are saved in the Markdown format. These Markdown files are then automatically converted to HTML and PDF for easy sharing and reporting.
+## What to Expect on a Successful Run 🎉
 
-### Directory Structure for Outputs:
+After you've successfully run the tool, here's what you'll obtain:
 
-- **Markdown Outputs**: These are saved in the `./markdown` directory.
-- **HTML and PDF Outputs**: After the Markdown results are generated, they're converted into HTML and PDF formats and saved in the `./results` directory.
+### 1. Comprehensive Reports
+- Markdown files with detailed information on each test will be saved in the `./markdown` directory.
+  
+### 2. Visual Insights
+- Screenshots capturing pivotal information will be stored to assist your analysis. These will be stored under `_seo-tests-output/screenshots`.
 
-### Conversion:
+### 3. Easy-to-Share Reports
+- The Markdown files are automatically converted to HTML and PDF formats for easy sharing and reporting. These will be stored in the `./results` directory.
 
-The conversion of Markdown files to HTML and PDF formats is powered by Marp CLI. Our tool employs the `convertMarkdown` utility, which can be found in `./utils/conversion`, to leverage Marp's capabilities and transform Markdown documents seamlessly.
+### 4. Command Line Summary
+- You will see a summary of the test results, along with the paths to the generated reports, directly in your command line interface.
 
-### Manual Conversion
+### 5. Optional Email Reporting
+- If configured, an email report containing the PDF results will be sent to a specified email address.
 
-To manually convert a specific Markdown file to HTML and PDF, use the `--convert` or `-c` option followed by the path to the Markdown file:
+## Manual Conversion 🔄
 
+Convert a specific Markdown file to HTML and PDF:
 
 ```bash
-node main.js --convert path/to/your/markdown/file.md
+seo-tests --convert path/to/your/markdown/file.md
 ```
-
-or
-
+_or_
 ```bash
-node main.js -c path/to/your/markdown/file.md
+seo-tests -c path/to/your/markdown/file.md
 ```
 
-Replace <path_to_your_markdown_file> with the appropriate path.
 
 
+---
 
+This README.md has been written with love by ChatGPT V4. 💖
+
+---
+
+Feel free to fine-tune this README as needed!
