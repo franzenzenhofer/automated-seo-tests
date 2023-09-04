@@ -24,6 +24,7 @@ const { getSiteUrl } = require('./utils/sanitizers');
 const markdown = require('./utils/markdown');
 const { convertMarkdown } = require('./utils/conversion');
 const { sendReport } = require('./utils/mailer');
+const { sendReportSendGrid } = require('./utils/mailerSendGrid');
 
 // Define constants for directory structure.
 const topDirectory = '_seo-tests-output';
@@ -44,7 +45,13 @@ subDirectories.forEach(dir => {
 });
 
 // Parse command-line arguments to determine script behavior.
-const argv = yargs(hideBin(process.argv)).argv;
+const argv = yargs(hideBin(process.argv))
+  .option('m', {
+    alias: 'mail',
+    describe: 'Email addresses to send the report to',
+    type: 'string'
+  })
+  .argv;
 
 // If a convert argument is passed, manually convert the specified markdown file and then exit.
 if (argv.convert || argv.c) {
@@ -158,6 +165,10 @@ global.siteUrl = getSiteUrl(pages);
   try {
     const outputPaths = await convertMarkdown(markdownFilePath);
     console.log('Conversion completed. Files saved at:', outputPaths);
+    if (argv.m || argv.mail) {
+      const recipients = argv.m || argv.mail;
+      sendReportSendGrid([outputPaths.pdf], recipients);
+    }
   } catch (error) {
     console.error('Error during conversion:', error);
   }

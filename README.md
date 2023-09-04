@@ -80,6 +80,28 @@ PageType2: URL2
 ...
 ```
 
+### Emailing the Reports 📧
+
+Want to send the report directly to an email address? Use the `-m` or `--mail` option followed by the recipient's email address:
+
+```bash
+seo-tests --url https://www.example.com --mail recipient@example.com
+```
+
+or
+
+```bash
+seo-tests -u https://www.example.com -m recipient@example.com
+```
+
+You can also specify multiple email addresses by separating them with a comma:
+
+```bash
+seo-tests -u https://www.example.com -m recipient1@example.com,recipient2@example.com
+```
+
+
+
 ## Pro Tips 🌟
 
 - **First-Time Users**: You will be prompted to manually log into your Google account during the first run. After successfully logging in, make sure to return to the terminal and press the `ENTER` key to continue. Don't worry; your credentials will be saved for future use.
@@ -109,17 +131,60 @@ After you've successfully run the tool, here's what you'll obtain:
 ### 5. Optional Email Reporting
 - If configured, an email report containing the PDF results will be sent to a specified email address.
 
-## Manual Conversion 🔄
+## Manual Conversion of Markdown files 🔄
 
-Convert a specific Markdown file to HTML and PDF:
+If you want to add content to a Markdown report, you can convert a specific Markdown file to HTML and PDF manually:
 
 ```bash
 seo-tests --convert path/to/your/markdown/file.md
 ```
-_or_
+or
 ```bash
 seo-tests -c path/to/your/markdown/file.md
 ```
+
+## Advanced Usage ⚙️
+
+Beyond single runs, you might want to automate the SEO tests to run periodically. Depending on your operating system, different solutions apply:
+
+### Crontab (for Mac/Linux)
+
+1. Open your terminal.
+2. Enter `crontab -e` to edit the cron jobs.
+3. Add a new line in the format:
+
+```bash
+* * * * * /path/to/node /path/to/your/seo-tests-script.js [arguments]
+```
+
+Here, the five asterisks represent when the job will run (minute, hour, day of month, month, day of week). Adjust these to your desired frequency. For example, to run every day at 3 AM:
+
+```bash
+0 3 * * * /path/to/node /path/to/your/seo-tests-script.js [arguments]
+```
+
+4. Save and exit the editor.
+
+📝 **Note**: Ensure that the paths to `node` and your script are correct. You can find the path to `node` using the `which node` command.
+
+### Task Scheduler (for Windows)
+
+1. Open Task Scheduler from the Start Menu.
+2. In the Actions pane, click "Create Basic Task."
+3. Name your task and provide a description if desired. Click "Next."
+4. Choose the trigger for your task (e.g., Daily, Weekly). Click "Next."
+5. Set the time and frequency for your task. Click "Next."
+6. Choose "Start a program" as the action. Click "Next."
+7. Browse to the location of your `node.exe` and, in the "Add arguments" field, add the path to your `seo-tests-script.js` with any required arguments.
+
+```bash
+"path/to/your/seo-tests-script.js" [arguments]
+```
+
+8. Click "Next," review your settings, and click "Finish."
+
+📝 **Note**: Ensure that the paths to `node.exe` and your script are correct. Typically, `node.exe` will be located in the directory where Node.js was installed.
+
 
 
 
