@@ -117,13 +117,13 @@ seo-tests -u https://www.example.com -m recipient1@example.com,recipient2@exampl
 After you've successfully run the tool, here's what you'll obtain:
 
 ### 1. Comprehensive Reports
-- Markdown files with detailed information on each test will be saved in the `./markdown` directory.
+- Markdown files with detailed information on each test will be saved in the `./_seo-tests-output/markdown` directory.
   
 ### 2. Visual Insights
-- Screenshots capturing pivotal information will be stored to assist your analysis. These will be stored under `_seo-tests-output/screenshots`.
+- Screenshots capturing pivotal information will be stored to assist your analysis. These will be stored under `./_seo-tests-output/screenshots`.
 
 ### 3. Easy-to-Share Reports
-- The Markdown files are automatically converted to HTML and PDF formats for easy sharing and reporting. These will be stored in the `./results` directory.
+- The Markdown files are automatically converted to HTML and PDF formats for easy sharing and reporting. These will be stored in the `./_seo-tests-output/results` directory.
 
 ### 4. Command Line Summary
 - You will see a summary of the test results, along with the paths to the generated reports, directly in your command line interface.
