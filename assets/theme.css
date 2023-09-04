@@ -76,6 +76,29 @@ header {
   border-bottom: 1px solid;
 }
 
+header:after {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: block;
+  padding: 20px 40px;
+  line-height: 1;
+  color: #fff;
+  font-size: 22px;
+  text-transform: capitalize;
+  font-weight: bold;
+}
+
+section.failed header:after {
+  content: "Test Status: Failed";
+  background: #f44336;
+}
+
+section.passed header:after {
+  content: "Test Status: Passed";
+  background: #689F38;
+}
+
 footer {
   display: flex;
   align-items: center;

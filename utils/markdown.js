@@ -91,7 +91,7 @@ ${pageUrl}
  * @param {string} screenshotUrl - URL of the screenshot.
  * @param {string} markdownFilePath - Path to the markdown file where the slide will be appended.
  */
-const generateMarkdownSlide = async (headline, pageType, pageUrl, screenshotPath, testUrl, markdownFilePath) => {
+const generateMarkdownSlide = async (headline, pageType, pageUrl, screenshotPath, testUrl, testStatus, markdownFilePath) => {
   try {
     const markdownDir = path.resolve(process.cwd(), topDirectory, 'markdown');
     const relativeScreenshotPath = path.relative(markdownDir, screenshotPath);
@@ -99,7 +99,7 @@ const generateMarkdownSlide = async (headline, pageType, pageUrl, screenshotPath
 
       `
 <!-- 
-_class: default 
+_class: default ${testStatus}
 _header: ${pageType} (${pageUrl})
 -->
 
@@ -140,7 +140,7 @@ _header: ${pageType} (${pageUrl})
  * @param {string} diffImagePath - Path to the diff image (comparison result).
  * @param {string} markdownFilePath - Path to the markdown file where the slide will be appended.
  */
-const generateMarkdownSlideJSonoff = async (headline, pageType, pageUrl, screenshotPath1, screenshotPath2, diffImagePath, markdownFilePath) => {
+const generateMarkdownSlideJSonoff = async (headline, pageType, pageUrl, screenshotPath1, screenshotPath2, diffImagePath, testStatus, markdownFilePath) => {
   try {
     const markdownDir = path.resolve(process.cwd(), topDirectory, 'markdown');
     const relativeScreenshotPath1 = path.relative(markdownDir, screenshotPath1);
@@ -159,7 +159,7 @@ const generateMarkdownSlideJSonoff = async (headline, pageType, pageUrl, screens
 
     const markdownSlide = `
 <!-- 
-_class: default 
+_class: default ${testStatus}
 _header: '${pageType} (${pageUrl})'
 -->
 
