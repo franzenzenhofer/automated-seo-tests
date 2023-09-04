@@ -82,7 +82,7 @@ PageType2: URL2
 
 ## Pro Tips 🌟
 
-- **First-Time Users**: You will be prompted to manually log into your Google account during the first run. Don't worry; your credentials will be saved for future use.
+- **First-Time Users**: You will be prompted to manually log into your Google account during the first run. After successfully logging in, make sure to return to the terminal and press the `ENTER` key to continue. Don't worry; your credentials will be saved for future use.
   
 ## Output 📊
 

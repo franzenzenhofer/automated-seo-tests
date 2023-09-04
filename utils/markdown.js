@@ -112,8 +112,6 @@ _header: ${pageType} (${pageUrl})
 :::
 
 :::col
-## IS
-## SHOULD
 :::
 
 ::::
@@ -182,8 +180,6 @@ _header: '${pageType} (${pageUrl})'
 ${diffImageMarkdown}
 
 :::col
-## IS
-## SHOULD
 :::
 
 ::::
@@ -237,8 +233,6 @@ _header: '${pageType} (${pageUrl})'
 :::
 
 :::col
-## IS
-## SHOULD
 :::
 
 ::::
