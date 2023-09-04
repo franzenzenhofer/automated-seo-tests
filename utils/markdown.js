@@ -36,7 +36,7 @@ _class: title
 _class: intro
 -->
 
-# 4 SEO Tests to do 80% of technical onpage/onsite SEO right!
+# 4 SEO Tests to do 80% of technical onpage SEO right!
 - Page Speed Insights: minimum score of 80 (still orange) / preferrably 90 (green) + sensemaking screenshots for desktop and mobile!
 - Google Mobile Friendly Test: Green + sensemaking screenshot!
 - “JS turned off” Test:
