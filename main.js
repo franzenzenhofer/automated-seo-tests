@@ -32,15 +32,15 @@ const subDirectories = ['screenshots', 'markdown', 'results'];
 // Ensure the top directory exists.
 const topDirPath = path.join(process.cwd(), topDirectory);
 if (!fs.existsSync(topDirPath)) {
-    fs.mkdirSync(topDirPath);
+  fs.mkdirSync(topDirPath);
 }
 
 // Ensure subdirectories exist within the top directory.
 subDirectories.forEach(dir => {
-    const dirPath = path.join(topDirPath, dir);
-    if (!fs.existsSync(dirPath)) {
-        fs.mkdirSync(dirPath);
-    }
+  const dirPath = path.join(topDirPath, dir);
+  if (!fs.existsSync(dirPath)) {
+    fs.mkdirSync(dirPath);
+  }
 });
 
 // Parse command-line arguments to determine script behavior.
@@ -50,14 +50,14 @@ const argv = yargs(hideBin(process.argv)).argv;
 if (argv.convert || argv.c) {
   const mdFilePath = argv.convert || argv.c;
   if (fs.existsSync(mdFilePath)) {
-      try {
-          const outputPaths = convertMarkdown(mdFilePath);
-          console.log('Conversion completed. Files saved at:', outputPaths);
-      } catch (error) {
-          console.error('Error during manual conversion:', error);
-      }
+    try {
+      const outputPaths = convertMarkdown(mdFilePath);
+      console.log('Conversion completed. Files saved at:', outputPaths);
+    } catch (error) {
+      console.error('Error during manual conversion:', error);
+    }
   } else {
-      console.error(`File ${mdFilePath} does not exist.`);
+    console.error(`File ${mdFilePath} does not exist.`);
   }
   process.exit();
 }
@@ -117,18 +117,18 @@ global.siteUrl = getSiteUrl(pages);
     if (error.message === 'No cookies file found.' || error.message === 'Cookies are outdated or invalid.') {
       console.log('Navigating to Google sign in page.');
       await page.goto('https://accounts.google.com/signin');
-  
+
       const rl = readline.createInterface({
         input: process.stdin,
         output: process.stdout
       });
-  
+
       await new Promise((resolve, reject) => {
         rl.question("Please login to your Google account in the browser then press Enter to continue...", function (answer) {
           resolve();
         });
       });
-  
+
       rl.close();
       // Save cookies after logging in.
       await saveCookies(page);

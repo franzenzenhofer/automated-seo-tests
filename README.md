@@ -23,7 +23,7 @@ For an in-depth understanding of these tests and why they are essential, check o
 
 ## Prerequisites 🛠
 
-- `Node.js` and `npm`: If you're new to Node.js, download and install it from [nodejs.org](https://nodejs.org/).
+- `Node.js (v16 or higher)` and `npm`: If you're new to Node.js or running a version below 16, download and install the latest version from [nodejs.org](https://nodejs.org/).
 
 ## Getting Started 🚀
 
@@ -86,8 +86,9 @@ PageType2: URL2
   
 ## Output 📊
 
-- **Markdown Outputs**: Check `./markdown` directory.
-- **HTML and PDF Outputs**: Available in the `./results` directory.
+- **Markdown Outputs**: All markdown reports are generated and stored in the `./_seo-tests-output/markdown` directory.
+- **Screenshots**: Relevant screenshots from various tests can be found in the `./_seo-tests-output/screenshots` directory.
+- **HTML and PDF Outputs**: Once the markdown files are converted, you can find the HTML and PDF reports in the `./_seo-tests-output/results` directory.
 
 ## What to Expect on a Successful Run 🎉
 
