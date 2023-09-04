@@ -199,7 +199,6 @@ ${diffImageMarkdown}
 };
 
 
-
 /**
  * Generates and appends a markdown slide for URL Inspection and Mobile frienldy test.
  * 

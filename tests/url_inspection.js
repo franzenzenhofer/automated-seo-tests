@@ -6,7 +6,15 @@ const markdown = require('../utils/markdown');
 let inspectScreenshot;
 let resourcesScreenshot;
 
-
+/**
+ * Runs the URL inspection test using Google's Search Console.
+ * 
+ * @param {object} browser - Puppeteer browser instance.
+ * @param {string} pageType - Type of the page being inspected.
+ * @param {string} url - The URL to inspect.
+ * @param {object} siteUrl - The site URL information.
+ * @returns {Promise<object>} - Object containing test URL, screenshot path, and resources screenshot path.
+ */
 const runUrlInspectionTest = async (browser, pageType, url, siteUrl) => {
   const page = await browser.newPage();
 
@@ -135,6 +143,16 @@ const runUrlInspectionTest = async (browser, pageType, url, siteUrl) => {
   };
 };
 
+/**
+ * Main function to run the URL inspection test and generate a markdown section.
+ * 
+ * @param {object} browser - Puppeteer browser instance.
+ * @param {string} pageType - Type of the page being inspected.
+ * @param {string} url - The URL to inspect.
+ * @param {object} siteUrl - The site URL information.
+ * @param {string} markdownFilePath - Path to the markdown file.
+ * @returns {Promise<object>} - Object containing test results and screenshots.
+ */
 module.exports = async (browser, pageType, url, siteUrl, markdownFilePath) => {
   const urlInspectionData = await runUrlInspectionTest(browser, pageType, url, siteUrl);
   await markdown.generateMarkdownInspectAndMobileFriendly('Google Search Console - URL Inspection', pageType, url, urlInspectionData.screenshotPath, urlInspectionData.resourcesScreenshotPath, urlInspectionData.testUrl, markdownFilePath);

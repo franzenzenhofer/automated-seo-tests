@@ -6,6 +6,14 @@ const topDirectory = '_seo-tests-output';
 
 const pagespeedUrl = 'https://pagespeed.web.dev/analysis?url=';
 
+
+/**
+ * Navigate to PageSpeed Insights for a given URL and waits for the report to generate.
+ * 
+ * @param {object} page - Puppeteer page instance.
+ * @param {string} url - The URL to analyze.
+ * @returns {Promise<string>} - The full PageSpeed Insights URL.
+ */
 const runPageSpeedTest = async (page, url) => {
   const psiUrl = `${pagespeedUrl}${encodeURIComponent(url)}`;
   await page.goto(psiUrl);
@@ -14,6 +22,12 @@ const runPageSpeedTest = async (page, url) => {
   return psiUrl;
 };
 
+/**
+ * Clicks the 'Ok, Got it.' button, typically a cookie acceptance.
+ *
+ * @param {object} page - Puppeteer page instance.
+ * @param {boolean} isFirstPage - Indicates if this is the first page being processed.
+ */
 const clickOkGotIt = async (page, isFirstPage) => {
   if (!isFirstPage) return;
 
@@ -31,6 +45,12 @@ const clickOkGotIt = async (page, isFirstPage) => {
   }
 };
 
+/**
+ * Takes a screenshot of the PageSpeed Insights report.
+ * 
+ * @param {object} page - Puppeteer page instance.
+ * @param {string} filepath - Destination path for the screenshot.
+ */
 const takeScreenshot = async (page, filepath) => {
   try {
     await page.waitForSelector('div#performance', { visible: true, timeout: 10000 });
@@ -67,6 +87,17 @@ const takeScreenshot = async (page, filepath) => {
   }
 };
 
+/**
+ * Main function to run the PageSpeed Insights test and generate a markdown slide.
+ * 
+ * @param {object} browser - Puppeteer browser instance.
+ * @param {string} pageType - Type of the page being tested.
+ * @param {string} url - The URL to analyze.
+ * @param {object} siteUrl - The site URL information.
+ * @param {boolean} isFirstPage - Indicates if this is the first page being processed.
+ * @param {string} markdownFilePath - Path to the markdown file.
+ * @returns {Promise<object>} - Object containing test URL and screenshot path.
+ */
 module.exports = async (browser, pageType, url, siteUrl, isFirstPage, markdownFilePath) => {
   const page = await browser.newPage();
 

@@ -2,6 +2,9 @@ require('dotenv').config();
 const nodemailer = require('nodemailer');
 const axios = require('axios');
 
+/**
+ * Nodemailer transport configuration.
+ */
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -13,6 +16,13 @@ const transporter = nodemailer.createTransport({
   }
 });
 
+/**
+ * Refreshes the OAuth2 access token.
+ *
+ * @async
+ * @returns {string} The refreshed access token.
+ * @throws {Error} Throws an error if refreshing the access token fails.
+ */
 async function refreshAccessToken() {
   try {
     const response = await axios.post('https://oauth2.googleapis.com/token', {
@@ -42,6 +52,14 @@ async function refreshAccessToken() {
   }
 }
 
+/**
+ * Sends an SEO test report via email.
+ *
+ * @async
+ * @param {string[]} files - Array of file paths to be attached in the email.
+ * @param {string} toEmail - Recipient email address.
+ * @throws {Error} Throws an error if sending the email fails.
+ */
 async function sendReport(files, toEmail) {
   try {
     const newAccessToken = await refreshAccessToken();

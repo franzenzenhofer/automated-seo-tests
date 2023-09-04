@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+// Set a global siteUrl object that will be used across the script.
 global.siteUrl = {};
 
 const fs = require("fs");
@@ -10,13 +11,13 @@ const yargs = require('yargs/yargs');
 const { hideBin } = require('yargs/helpers');
 
 
-// Importing required test modules.
+// Importing test modules to perform specific SEO checks.
 const pagespeedTest = require("./tests/pagespeed");
 const jsOnOffTest = require("./tests/js_on_off");
 const mobileFriendlyTest = require("./tests/mobile_friendly");
 const urlInspectionTest = require("./tests/url_inspection");
 
-// Importing utilities.
+// Importing utility modules for functionalities like saving/loading cookies, conversions, mail, etc.
 const { saveCookies, loadCookies, isLoggedIn } = require('./utils/cookies');
 const { sleep } = require('./utils/navigation');
 const { getSiteUrl } = require('./utils/sanitizers');
@@ -24,16 +25,17 @@ const markdown = require('./utils/markdown');
 const { convertMarkdown } = require('./utils/conversion');
 const { sendReport } = require('./utils/mailer');
 
+// Define constants for directory structure.
 const topDirectory = '_seo-tests-output';
 const subDirectories = ['screenshots', 'markdown', 'results'];
 
-// Ensure the top directory exists
+// Ensure the top directory exists.
 const topDirPath = path.join(process.cwd(), topDirectory);
 if (!fs.existsSync(topDirPath)) {
     fs.mkdirSync(topDirPath);
 }
 
-// Ensure subdirectories exist within the top directory
+// Ensure subdirectories exist within the top directory.
 subDirectories.forEach(dir => {
     const dirPath = path.join(topDirPath, dir);
     if (!fs.existsSync(dirPath)) {
@@ -41,10 +43,10 @@ subDirectories.forEach(dir => {
     }
 });
 
-// Parse command line arguments.
+// Parse command-line arguments to determine script behavior.
 const argv = yargs(hideBin(process.argv)).argv;
 
-// Manual conversion
+// If a convert argument is passed, manually convert the specified markdown file and then exit.
 if (argv.convert || argv.c) {
   const mdFilePath = argv.convert || argv.c;
   if (fs.existsSync(mdFilePath)) {
@@ -60,6 +62,7 @@ if (argv.convert || argv.c) {
   process.exit();
 }
 
+// Determine which pages to test based on arguments: single URL or batch from file.
 let pages = {};
 
 if (argv.url || argv.u) {
@@ -84,6 +87,8 @@ if (argv.url || argv.u) {
 
 global.siteUrl = getSiteUrl(pages);
 
+// Main workflow begins here.
+
 (async () => {
   let browser;
   try {
@@ -100,6 +105,7 @@ global.siteUrl = getSiteUrl(pages);
   await page.goto('https://accounts.google.com');
 
   try {
+    // Load cookies for the page and check if the user is logged into Google.
     await loadCookies(page);
     const loggedIn = await isLoggedIn(page);
     if (!loggedIn) {
@@ -107,6 +113,7 @@ global.siteUrl = getSiteUrl(pages);
       throw new Error('Cookies are outdated or invalid.');
     }
   } catch (error) {
+    // If no cookies are found or if they're invalid, navigate to Google sign-in page.
     if (error.message === 'No cookies file found.' || error.message === 'Cookies are outdated or invalid.') {
       console.log('Navigating to Google sign in page.');
       await page.goto('https://accounts.google.com/signin');
@@ -123,7 +130,7 @@ global.siteUrl = getSiteUrl(pages);
       });
   
       rl.close();
-  
+      // Save cookies after logging in.
       await saveCookies(page);
       await sleep(2000);
     } else {
@@ -132,10 +139,10 @@ global.siteUrl = getSiteUrl(pages);
     }
   }
 
+  // Iterate through each page and run the various SEO tests on them.
   let isFirstPage = true;
   const outputDir = process.cwd();
   const markdownFilePath = await markdown.createNewMarkdownFile(global.siteUrl, outputDir);
-
   for (const [pageType, url] of Object.entries(pages)) {
     await markdown.generateMarkdownSubTitleSlide(pageType, url, markdownFilePath);
     const pagespeedData = await pagespeedTest(browser, pageType, url, global.siteUrl, isFirstPage, markdownFilePath);
@@ -147,10 +154,10 @@ global.siteUrl = getSiteUrl(pages);
 
   await browser.close();
 
+  // Convert the generated markdown into the desired output format.
   try {
     const outputPaths = await convertMarkdown(markdownFilePath);
     console.log('Conversion completed. Files saved at:', outputPaths);
-    //sendReport([outputPaths.pdf], 'holger.guggi@fullstackoptimization.com');
   } catch (error) {
     console.error('Error during conversion:', error);
   }

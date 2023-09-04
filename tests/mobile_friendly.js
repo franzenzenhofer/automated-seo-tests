@@ -6,6 +6,14 @@ const markdown = require('../utils/markdown');
 let inspectScreenshot;
 let resourcesScreenshot;
 
+/**
+ * Executes the mobile-friendly test for a given URL and page type.
+ * 
+ * @param {Object} page - Puppeteer page object
+ * @param {string} url - URL to test
+ * @param {string} pageType - Type or category of the page (e.g., homepage, product page)
+ * @returns {Object} - Results of the mobile-friendly test, including the tested URL and paths to the screenshots
+ */
 const runMobileFriendlyTest = async (page, url, pageType) => {
   const testUrl = `https://search.google.com/test/mobile-friendly?url=${encodeURIComponent(url)}`;
   await page.goto(testUrl, { waitUntil: 'networkidle2' });
@@ -56,6 +64,15 @@ const runMobileFriendlyTest = async (page, url, pageType) => {
   };
 };
 
+/**
+ * Initializes and manages the execution of the mobile-friendly test.
+ * 
+ * @param {Object} browser - Puppeteer browser object
+ * @param {string} pageType - Type or category of the page
+ * @param {string} url - URL to test
+ * @param {string} markdownFilePath - Path to the markdown file where results will be saved
+ * @returns {Object} - Results of the mobile-friendly test
+ */
 module.exports = async (browser, pageType, url, markdownFilePath) => {
   const page = await browser.newPage();
 

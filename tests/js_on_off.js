@@ -13,6 +13,14 @@ const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
 
 let result;
 
+/**
+ * Compares two images and returns a differential image highlighting the differences.
+ * 
+ * @param {string} imgPath1 - Path to the first image
+ * @param {string} imgPath2 - Path to the second image
+ * @param {string} outputPath - Path where the differential image should be saved
+ * @returns {string|null} - Path to the differential image if differences exist; null otherwise
+ */
 async function compareScreenshots(imgPath1, imgPath2, outputPath) {
     const img1 = PNG.sync.read(fs.readFileSync(imgPath1));
     const img2 = PNG.sync.read(fs.readFileSync(imgPath2));
@@ -30,6 +38,9 @@ async function compareScreenshots(imgPath1, imgPath2, outputPath) {
     return null;
 }
 
+/**
+ * Device specifications for iPhone 13.
+ */
 const iPhone13 = {
   name: 'iPhone 13',
   userAgent:
@@ -44,6 +55,15 @@ const iPhone13 = {
   },
 };
 
+/**
+ * Executes the test for a given page and configuration.
+ * 
+ * @param {Object} page - Puppeteer page object
+ * @param {string} url - URL to test
+ * @param {boolean} jsEnabled - Determines if JavaScript should be enabled for the test
+ * @param {string} pageType - Type or category of the page (e.g., homepage, product page)
+ * @returns {Object} - Results of the test including the state of JS, tested URL, and path to the screenshot
+ */
 const runTest = async (page, url, jsEnabled, pageType) => {
   await page.setUserAgent(iPhone13.userAgent);
   await page.setViewport(iPhone13.viewport);
@@ -61,6 +81,14 @@ const runTest = async (page, url, jsEnabled, pageType) => {
   };
 };
 
+/**
+ * Initializes and manages the execution of tests for pages with JS on and off.
+ * 
+ * @param {Object} browser - Puppeteer browser object
+ * @param {string} pageType - Type or category of the page
+ * @param {string} url - URL to test
+ * @param {string} markdownFilePath - Path to the markdown file where results will be saved
+ */
 module.exports = async (browser, pageType, url, markdownFilePath) => {
   const page = await browser.newPage();
 

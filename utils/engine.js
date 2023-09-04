@@ -1,5 +1,13 @@
 const markdownItContainer = require('markdown-it-container');
 
+/**
+ * Enhances the provided marp instance with custom markdown rendering rules.
+ *
+ * @module engine
+ * @param {Object} options - Configuration object.
+ * @param {Object} options.marp - The marp instance to enhance.
+ * @returns {Object} The enhanced marp instance.
+ */
 module.exports = ({ marp }) => {
   // Define the custom rendering function for the slideInner container
   const slideInnerContainer = {
