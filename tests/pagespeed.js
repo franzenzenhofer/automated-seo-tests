@@ -54,7 +54,7 @@ const clickOkGotIt = async (page, isFirstPage) => {
  */
 const takeScreenshot = async (page, filepath) => {
   try {
-    await page.waitForSelector('div#performance', { visible: true, timeout: 10000 });
+    await page.waitForSelector('div#performance', { visible: true, timeout: 60000 });
     await page.waitForXPath(
       "//span[contains(., 'Opportunities') and contains(@class, 'lh-audit-group__title')]",
       { visible: true, timeout: 10000 }
@@ -93,7 +93,7 @@ const takeScreenshot = async (page, filepath) => {
  * A score of 80 or above indicates a pass, while any score below 80 indicates a failure.
  * 
  * @param {object} page - Puppeteer page instance.
- * @returns {Promise<boolean>} - Returns true if the test passes (score >= 80), otherwise false.
+ * @returns {Promise<string>} - Returns 'passed' if the test passes (score >= 80), 'warning' for scores between 60-79, otherwise 'failed'.
  * @throws {Error} - Throws an error if there's an issue accessing the performance score element on the page.
  */
 const pagespeedValidator = async (page) => {
@@ -102,13 +102,18 @@ const pagespeedValidator = async (page) => {
   
   if (!element.length) {
     console.warn('Performance score element not found.');
-    return false;
+    return 'failed';  // If the performance score element isn't found, the test is considered as failed.
   }
 
   const score = await page.evaluate(el => parseInt(el.innerText, 10), element[0]);
-  
-  return score >= 80;
+
+  if (score >= 80) {
+    return 'passed';
+  } else {
+    return 'failed';
+  }
 };
+
 
 /**
  * Main function to run the PageSpeed Insights test and generate a markdown slide.

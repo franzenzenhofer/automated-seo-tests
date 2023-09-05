@@ -44,12 +44,14 @@ async function compareScreenshots(imgPath1, imgPath2, outputPath) {
  * Validates the JS On/Off test based on the difference between two screenshots.
  * If there are no differences (diffResult is null), the test is passed.
  * 
+ * @param {Page} page - Puppeteer page instance (not used in this validator, but kept for consistency).
  * @param {string|null} diffResult - Path to the differential image if differences exist; null otherwise.
- * @returns {boolean} - Returns true if the test passes (diffResult is null), otherwise false.
+ * @returns {string} - Returns 'passed' if the test passes (diffResult is null), otherwise 'failed'.
  */
 const jsOnOffValidator = (page, diffResult) => {
-  return diffResult === null;
+  return diffResult === null ? 'passed' : 'failed';
 };
+
 
 /**
  * Device specifications for iPhone 13.

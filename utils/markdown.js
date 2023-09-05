@@ -250,10 +250,70 @@ ${notes}
   }
 };
 
+/**
+ * Generates and appends a markdown slide showing comparison between JS on and off.
+ * 
+ * @param {string} headline - Slide headline.
+ * @param {string} pageType - Type of the page.
+ * @param {string} pageUrl - URL of the page.
+ * @param {string} screenshotPath1 - Path to the screenshot with JS on.
+ * @param {string} screenshotPath2 - Path to the screenshot with JS off.
+ * @param {string} diffImagePath - Path to the diff image (comparison result).
+ * @param {string} markdownFilePath - Path to the markdown file where the slide will be appended.
+ */
+const generateMarkdownInspectAndMobileFriendlyVisualDifference = async (headline, pageType, pageUrl, screenshotPath1, screenshotPath2, diffImagePath, testStatus, markdownFilePath) => {
+  try {
+    const markdownDir = path.resolve(process.cwd(), topDirectory, 'markdown');
+    const relativeScreenshotPath1 = path.relative(markdownDir, screenshotPath1);
+    const relativeScreenshotPath2 = path.relative(markdownDir, screenshotPath2);
+    const relativeDiffImagePath = diffImagePath ? path.relative(markdownDir, diffImagePath) : null;
+
+    const markdownSlide = `
+<!-- 
+_class: default ${testStatus}
+_header: '${pageType} (${pageUrl})'
+-->
+
+# ${headline}
+
+:::: slideInner
+
+:::col
+## Actual Screenshot
+![screenshot](${relativeScreenshotPath1})
+:::
+
+:::col
+## Test Screenshot
+![screenshot](${relativeScreenshotPath2})
+:::
+
+:::col
+## Difference
+![screenshot](${relativeDiffImagePath})
+:::
+
+:::col
+:::
+
+::::
+
+---
+
+`;
+
+    fs.appendFileSync(markdownFilePath, markdownSlide);
+  } catch (error) {
+    console.error(`Failed to generate markdown slide. ${error}`);
+  }
+};
+
+
 module.exports = {
   createNewMarkdownFile,
   generateMarkdownSlide,
   generateMarkdownSlideJSonoff,
   generateMarkdownInspectAndMobileFriendly,
   generateMarkdownSubTitleSlide,
+  generateMarkdownInspectAndMobileFriendlyVisualDifference,
 };

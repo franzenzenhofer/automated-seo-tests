@@ -6,7 +6,7 @@ const pixelmatch = require('pixelmatch');
 const { captureScreenshot } = require('../utils/screenshot');
 const { sleep, waitForElementByXPath, waitAndClickByXPath } = require('../utils/navigation');
 const { sanitizeString } = require('../utils/sanitizers');
-const { validateTestInspectUrl } = require('../utils/validation');
+const { validateTest } = require('../utils/validation');
 const markdown = require('../utils/markdown');
 
 let inspectScreenshot;
@@ -93,40 +93,48 @@ async function compareScreenshots(imgPath1, imgPath2, outputPath) {
  * @returns {string} - Path to the saved trimmed image.
  * @throws {Error} - If the image element is not found.
  */
+
 const saveInspectUrlRender = async (page) => {
-  // Select the image element using the XPath
-  const [imgElement] = await page.$x('//span[@jsslot and @jsname and @class and @jsname and @role="tabpanel" and @id]//img');
+  try {
+    // Select the image element using the XPath
+    const [imgElement] = await page.$x('//span[@jsslot and @jsname and @class and @jsname and @role="tabpanel" and @id]//img');
 
-  if (!imgElement) {
-    throw new Error('Image element not found');
+    if (!imgElement) {
+      console.error('Image element not found in saveInspectUrlRender');
+      return null; // Or some error value indicating a failure
+    }
+
+    // Get the src attribute which is a base64 encoded string
+    const base64Encoded = await imgElement.getProperty('src');
+    const base64 = (await base64Encoded.jsonValue()).split(';base64,')[1];
+
+    // Convert base64 to a Buffer
+    const buffer = Buffer.from(base64, 'base64');
+
+    // Decode the image using pngjs
+    const img = PNG.sync.read(buffer);
+
+    // Create a new trimmed image
+    const trimmed = new PNG({
+      width: img.width,
+      height: Math.min(img.height, 1200) // Trim height to 1200px
+    });
+
+    PNG.bitblt(img, trimmed, 0, 0, img.width, Math.min(img.height, 1200), 0, 0);
+
+    // Save the trimmed image to disk
+    const fileName = `${global.siteUrl.domain}_inspect_url_render_${timestamp}`;
+    const outputPath = path.resolve(process.cwd(), topDirectory, 'screenshots', `${fileName}.png`);
+
+    fs.writeFileSync(outputPath, PNG.sync.write(trimmed));
+
+    return outputPath;
+  } catch (err) {
+    console.error('Error in saveMobileFriendlyRender:', err);
+    return null; // Or some error value indicating a failure
   }
-
-  // Get the src attribute which is a base64 encoded string
-  const base64Encoded = await imgElement.getProperty('src');
-  const base64 = (await base64Encoded.jsonValue()).split(';base64,')[1];
-
-  // Convert base64 to a Buffer
-  const buffer = Buffer.from(base64, 'base64');
-
-  // Decode the image using pngjs
-  const img = PNG.sync.read(buffer);
-
-  // Create a new trimmed image
-  const trimmed = new PNG({
-    width: img.width,
-    height: Math.min(img.height, 1200) // Trim height to 1200px
-  });
-
-  PNG.bitblt(img, trimmed, 0, 0, img.width, Math.min(img.height, 1200), 0, 0);
-
-  // Save the trimmed image to disk
-  const fileName = `${global.siteUrl.domain}_inspect_url_render_${timestamp}`;
-  const outputPath = path.resolve(process.cwd(), topDirectory, 'screenshots', `${fileName}.png`);
-
-  fs.writeFileSync(outputPath, PNG.sync.write(trimmed));
-
-  return outputPath;
 };
+
 
 /**
  * Extracts visual difference, and resources status data from the given Puppeteer page.
@@ -170,10 +178,14 @@ const extractInspectUrlData = async (page) => {
  * @returns {boolean} - Returns true if the page meets all the validation criteria; otherwise, returns false.
  */
 const inspectUrlValidator = (data) => {
-  if (data.visual_difference !== null) return false;
-  if (data.resources_status && data.resources_status.includes("couldn't be loaded")) return false;
+  // Issue a warning if there are visual differences.
+  if (data.visual_difference !== null) return 'warning';
 
-  return true;
+  // Issue a warning if resources couldn't be loaded.
+  if (data.resources_status && data.resources_status.includes("couldn't be loaded")) return 'warning';
+
+  // If none of the above conditions met, the test passed.
+  return 'passed';
 };
 
 /**
@@ -317,6 +329,9 @@ const runUrlInspectionTest = async (browser, pageType, url, siteUrl) => {
 
   const updatedUrl = page.url();
 
+  await page.goto(updatedUrl, { waitUntil: 'networkidle2' });
+  await sleep(1000);
+
   const inspectUrlTestResultsExtracted = await extractInspectUrlData(page);
 
   await page.close();
@@ -344,7 +359,7 @@ const runUrlInspectionTest = async (browser, pageType, url, siteUrl) => {
  */
 module.exports = async (browser, pageType, url, siteUrl, markdownFilePath) => {
   const urlInspectionData = await runUrlInspectionTest(browser, pageType, url, siteUrl);
-  
+
   // Compare actual screenshot with Rendering
   const differenceScreenshotPath = await compareScreenshots(urlInspectionData.actualScreenshotPath.screenshotPath, urlInspectionData.inspectUrlRenderPath, `${topDirectory}/screenshots/inspect_url_difference_${timestamp}.png`);
 
@@ -354,17 +369,18 @@ module.exports = async (browser, pageType, url, siteUrl, markdownFilePath) => {
     : "No visual differences in page rendering";
 
   // Check the Test Status
-  const inspectUrlValidationResult = inspectUrlValidator(urlInspectionData.inspectUrlTestResultsExtracted);
-
-  const testStatus = await validateTestInspectUrl(inspectUrlValidationResult);
+  const testStatus = await validateTest(null, () => inspectUrlValidator(urlInspectionData.inspectUrlTestResultsExtracted));
 
   const notes =
-  `
+    `
   ## IS
   - Page Resources: ${urlInspectionData.inspectUrlTestResultsExtracted.resources_status}
   - ${urlInspectionData.inspectUrlTestResultsExtracted.visual_difference}
   `
 
   await markdown.generateMarkdownInspectAndMobileFriendly('Google Search Console - URL Inspection', pageType, url, urlInspectionData.screenshotPath, urlInspectionData.resourcesScreenshotPath, urlInspectionData.testUrl, testStatus, notes, markdownFilePath);
+  if (differenceScreenshotPath) {
+    await markdown.generateMarkdownInspectAndMobileFriendlyVisualDifference('Google Search Console - URL Inspection - Visual Comparison', pageType, url, urlInspectionData.actualScreenshotPath.screenshotPath, urlInspectionData.inspectUrlRenderPath, differenceScreenshotPath, testStatus, markdownFilePath);
+  }
   return urlInspectionData;
 };

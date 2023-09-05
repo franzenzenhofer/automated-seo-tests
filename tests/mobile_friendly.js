@@ -74,8 +74,6 @@ async function compareScreenshots(imgPath1, imgPath2, outputPath) {
 
   const numDiffPixels = pixelmatch(img1.data, img2.data, diff.data, width, height, { threshold: 0.1 });
 
-  console.log(numDiffPixels);
-
   // To not let a scroll bar falsely considered
   if (numDiffPixels > 50) {
     diff.pack().pipe(fs.createWriteStream(outputPath));
@@ -94,39 +92,46 @@ async function compareScreenshots(imgPath1, imgPath2, outputPath) {
  * @throws {Error} - If the image element is not found.
  */
 const saveMobileFriendlyRender = async (page) => {
-  // Select the image element using the XPath
-  const [imgElement] = await page.$x('//span[@jsslot and @jsname and @class and @jsname and @role="tabpanel" and @id]//img');
+  try {
+    // Select the image element using the XPath
+    const [imgElement] = await page.$x('//span[@jsslot and @jsname and @class and @jsname and @role="tabpanel" and @id]//img');
 
-  if (!imgElement) {
-    throw new Error('Image element not found');
+    if (!imgElement) {
+      console.error('Image element not found in saveMobileFriendlyRender');
+      return null; // Or some error value indicating a failure
+    }
+
+    // Get the src attribute which is a base64 encoded string
+    const base64Encoded = await imgElement.getProperty('src');
+    const base64 = (await base64Encoded.jsonValue()).split(';base64,')[1];
+
+    // Convert base64 to a Buffer
+    const buffer = Buffer.from(base64, 'base64');
+
+    // Decode the image using pngjs
+    const img = PNG.sync.read(buffer);
+
+    // Create a new trimmed image
+    const trimmed = new PNG({
+      width: img.width,
+      height: Math.min(img.height, 1200) // Trim height to 1200px
+    });
+
+    PNG.bitblt(img, trimmed, 0, 0, img.width, Math.min(img.height, 1200), 0, 0);
+
+    // Save the trimmed image to disk
+    const fileName = `${global.siteUrl.domain}_mobile_friendly_render_${timestamp}`;
+    const outputPath = path.resolve(process.cwd(), topDirectory, 'screenshots', `${fileName}.png`);
+
+    fs.writeFileSync(outputPath, PNG.sync.write(trimmed));
+
+    return outputPath;
+  } catch (err) {
+    console.error('Error in saveMobileFriendlyRender:', err);
+    return null; // Or some error value indicating a failure
   }
-
-  // Get the src attribute which is a base64 encoded string
-  const base64Encoded = await imgElement.getProperty('src');
-  const base64 = (await base64Encoded.jsonValue()).split(';base64,')[1];
-
-  // Convert base64 to a Buffer
-  const buffer = Buffer.from(base64, 'base64');
-
-  // Decode the image using pngjs
-  const img = PNG.sync.read(buffer);
-
-  // Create a new trimmed image
-  const trimmed = new PNG({
-    width: img.width,
-    height: Math.min(img.height, 1200) // Trim height to 1200px
-  });
-
-  PNG.bitblt(img, trimmed, 0, 0, img.width, Math.min(img.height, 1200), 0, 0);
-
-  // Save the trimmed image to disk
-  const fileName = `${global.siteUrl.domain}_mobile_friendly_render_${timestamp}`;
-  const outputPath = path.resolve(process.cwd(), topDirectory, 'screenshots', `${fileName}.png`);
-
-  fs.writeFileSync(outputPath, PNG.sync.write(trimmed));
-
-  return outputPath;
 };
+
 
 /**
  * Extracts mobile friendliness, visual difference, and resources status data from the given Puppeteer page.
@@ -181,10 +186,17 @@ const extractMobileFriendlyData = async (page) => {
  * @returns {boolean} - Returns true if the page meets all the validation criteria; otherwise, returns false.
  */
 const mobileFriendlyValidator = (data) => {
-  if (!data.mobile_friendly) return false;
-  if (data.visual_difference !== null) return false;
+  // Fail if the page isn't usable on mobile.
+  if (!data.mobile_friendly) return 'failed';
 
-  return true;
+  // Issue a warning if there are visual differences.
+  if (data.visual_difference !== null) return 'warning';
+
+  // Issue a warning if resources couldn't be loaded.
+  if (data.resources_status && data.resources_status.includes("couldn't be loaded")) return 'warning';
+
+  // If none of the above conditions met, the test passed.
+  return 'passed';
 };
 
 /**
@@ -293,9 +305,8 @@ module.exports = async (browser, pageType, url, markdownFilePath) => {
     : "No visual differences in page rendering";
 
   // Check the Test Status
-  const mobileFriendlyValidationResult = mobileFriendlyValidator(mobileFriendlyData.mobileFriendlyTestResultsExtracted);
+  const testStatus = await validateTest(null, () => mobileFriendlyValidator(mobileFriendlyData.mobileFriendlyTestResultsExtracted));
 
-  const testStatus = await validateTest(page, mobileFriendlyValidationResult);
 
   const notes =
 `
@@ -306,6 +317,11 @@ module.exports = async (browser, pageType, url, markdownFilePath) => {
 `
 
   await markdown.generateMarkdownInspectAndMobileFriendly('Google Mobile Friendly Test', pageType, url, mobileFriendlyData.screenshotPath, mobileFriendlyData.resourcesScreenshotPath, mobileFriendlyData.testUrl, testStatus, notes, markdownFilePath);
+  if (differenceScreenshotPath) {
+    await markdown.generateMarkdownInspectAndMobileFriendlyVisualDifference('Google Mobile Friendly Test - Visual Comparison', pageType, url, actualScreenshotPath.screenshotPath, mobileFriendlyData.mobileFriendlyRenderPath, differenceScreenshotPath, testStatus, markdownFilePath);
+  }
+
+  
 
   await page.close();
 

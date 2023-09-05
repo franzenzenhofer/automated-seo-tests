@@ -99,6 +99,11 @@ section.passed header:after {
   background: #689F38;
 }
 
+section.warning header:after {
+  content: "Test Status: Check manually";
+  background: #ff9800;
+}
+
 footer {
   display: flex;
   align-items: center;
