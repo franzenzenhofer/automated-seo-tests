@@ -91,7 +91,7 @@ async function compareScreenshots(imgPath1, imgPath2, outputPath) {
  * @returns {string} - Path to the saved trimmed image.
  * @throws {Error} - If the image element is not found.
  */
-const saveMobileFriendlyRender = async (page) => {
+const saveMobileFriendlyRender = async (page, pageType) => {
   try {
     // Select the image element using the XPath
     const [imgElement] = await page.$x('//span[@jsslot and @jsname and @class and @jsname and @role="tabpanel" and @id]//img');
@@ -120,7 +120,7 @@ const saveMobileFriendlyRender = async (page) => {
     PNG.bitblt(img, trimmed, 0, 0, img.width, Math.min(img.height, 1200), 0, 0);
 
     // Save the trimmed image to disk
-    const fileName = `${global.siteUrl.domain}_mobile_friendly_render_${timestamp}`;
+    const fileName = `${global.siteUrl.domain}_mobile_friendly_render_${sanitizeString(pageType)}_${timestamp}`;
     const outputPath = path.resolve(process.cwd(), topDirectory, 'screenshots', `${fileName}.png`);
 
     fs.writeFileSync(outputPath, PNG.sync.write(trimmed));
@@ -227,7 +227,7 @@ const runMobileFriendlyTest = async (page, url, pageType) => {
   inspectScreenshot = await captureScreenshot(page, null, `mobile-friendly_${sanitizeString(pageType)}`);
 
   // Save the page render.
-  const mobileFriendlyRenderPath = await saveMobileFriendlyRender(page);
+  const mobileFriendlyRenderPath = await saveMobileFriendlyRender(page, pageType);
 
   // Click the 'More Info' tab.
   await waitAndClickByXPath(page, "//div[contains(., 'more info') and @role='tab']");

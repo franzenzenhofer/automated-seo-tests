@@ -94,7 +94,7 @@ async function compareScreenshots(imgPath1, imgPath2, outputPath) {
  * @throws {Error} - If the image element is not found.
  */
 
-const saveInspectUrlRender = async (page) => {
+const saveInspectUrlRender = async (page, pageType) => {
   try {
     // Select the image element using the XPath
     const [imgElement] = await page.$x('//span[@jsslot and @jsname and @class and @jsname and @role="tabpanel" and @id]//img');
@@ -123,7 +123,7 @@ const saveInspectUrlRender = async (page) => {
     PNG.bitblt(img, trimmed, 0, 0, img.width, Math.min(img.height, 1200), 0, 0);
 
     // Save the trimmed image to disk
-    const fileName = `${global.siteUrl.domain}_inspect_url_render_${timestamp}`;
+    const fileName = `${global.siteUrl.domain}_inspect_url_render_${sanitizeString(pageType)}_${timestamp}`;
     const outputPath = path.resolve(process.cwd(), topDirectory, 'screenshots', `${fileName}.png`);
 
     fs.writeFileSync(outputPath, PNG.sync.write(trimmed));
@@ -270,7 +270,7 @@ const runUrlInspectionTest = async (browser, pageType, url, siteUrl) => {
   inspectScreenshot = await captureScreenshot(page, null, `inspect-url_${sanitizeString(pageType)}`);
 
   // Save the page render.
-  const inspectUrlRenderPath = await saveInspectUrlRender(page);
+  const inspectUrlRenderPath = await saveInspectUrlRender(page, pageType);
 
   // Click the 'More Info' tab
   const moreInfoTabXPath = "//div[contains(., 'more info') and @role='tab']";
