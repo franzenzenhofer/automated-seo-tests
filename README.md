@@ -260,21 +260,21 @@ To enhance your automated SEO tests experience, our tool provides the ability to
     *   SendGrid is a cloud-based SMTP provider that lets you send email without having to maintain email servers.
     *   SendGrid offers a free tier that lets you send up to 100 emails per day, making it a cost-effective option for smaller applications.
 
-    To select a service, fill in the relevant details in a `.env` file:
+To select a service, fill in the relevant details in a `.env` file:
 
-    ```env
-    GMAIL_CLIENT_ID=your_gmail_client_id
-    GMAIL_CLIENT_SECRET=your_gmail_client_secret
-    GMAIL_REFRESH_TOKEN=your_gmail_refresh_token
-    ```
+```env
+GMAIL_CLIENT_ID=your_gmail_client_id
+GMAIL_CLIENT_SECRET=your_gmail_client_secret
+GMAIL_REFRESH_TOKEN=your_gmail_refresh_token
+```
 
-    or
+or
 
-    ```env
-    SENDGRID_API_KEY=your_sendgrid_api_key
-    ```
+```env
+SENDGRID_API_KEY=your_sendgrid_api_key
+```
 
-    *   If none of the required keys is present mailing will not execute and the script will notify you.
+If none of the required keys is present mailing will not execute and the script will notify you.
 
 ### Setting up Gmail OAuth
 
@@ -286,8 +286,6 @@ To enhance your automated SEO tests experience, our tool provides the ability to
 6.  Note down your `Client ID` and `Client Secret`.
 7.  Use these credentials to obtain a `Refresh Token`. This step typically involves making an OAuth request, granting permissions, and then extracting the token.
 8.  Update your `.env` file with the credentials obtained.
-
-Certainly! Obtaining the refresh token involves a series of steps as you have to grant permissions to your application for the first time.
 
 #### Obtaining the Gmail Refresh Token:
 
@@ -314,6 +312,7 @@ Certainly! Obtaining the refresh token involves a series of steps as you have to
 4.  **Update your .env file**:
     
     *   Take the `Refresh Token` and add it to your `.env` file alongside the `Client ID` and `Client Secret`:
+    
     
     ```bash
     GMAIL_CLIENT_ID=Your_Client_ID
