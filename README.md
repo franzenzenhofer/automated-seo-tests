@@ -113,7 +113,7 @@ You can also specify multiple email addresses by separating them with a comma:
 seo-tests -u https://www.example.com -m recipient1@example.com,recipient2@example.com
 ```
 
-Using the Emailing feature requires you to setup a mail service. Please refer to the [Advanced Section - Opting-In for Mailing Functionality](#opting-in-for-mailing-functionality) below.
+Using the Emailing feature requires you to setup a mail service. Please refer to the [Advanced Section - Opting-In for Mailing Functionality](#opting-in-for-mailing-functionality-) below.
 
 ## Pro Tips 🌟
 
