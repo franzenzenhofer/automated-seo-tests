@@ -1,6 +1,6 @@
 require('dotenv').config();
 const nodemailer = require('nodemailer');
-const { getCurrentTimestamp } = require('../utils/sanitizers');
+const { getCurrentTimestamp } = require('./sanitizers');
 
 
 // Your SendGrid API key

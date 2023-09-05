@@ -23,8 +23,8 @@ const { sleep } = require('./utils/navigation');
 const { getSiteUrl } = require('./utils/sanitizers');
 const markdown = require('./utils/markdown');
 const { convertMarkdown } = require('./utils/conversion');
-const { sendReportGmail } = require('./utils/mailerGmail');
-const { sendReportSendGrid } = require('./utils/mailerSendGrid');
+const { sendReportSendGrid } = require('./utils/mailer_sendgrid');
+const { sendReportGmail } = require('./utils/mailer_gmail');
 
 async function sendMail(files, toEmail) {
   // If SendGrid key is present, use SendGrid
@@ -33,7 +33,7 @@ async function sendMail(files, toEmail) {
   } 
   // If Gmail keys are present, use Gmail
   else if (process.env.GMAIL_CLIENT_ID && process.env.GMAIL_CLIENT_SECRET && process.env.GMAIL_REFRESH_TOKEN) {
-    return sendReport(files, toEmail);
+    return sendReportGmail(files, toEmail);
   } 
   // If neither service is configured, notify the user
   else {
