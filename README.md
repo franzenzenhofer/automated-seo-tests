@@ -199,12 +199,12 @@ crontab -e
 
 This allows you to edit the cron jobs.
 
-2.  **Add Your Job with Logging **  
+2.  **Add Your Job with Logging**  
 Append a new line in the format:
 
-```bash
-* * * * * cd ~/Documents/seo-tests-monitor && /path/to/node /usr/local/bin/seo-tests [arguments] >> ~/Documents/seo-tests-monitor/seo-tests.log 2>&1
-```
+    ```bash
+    * * * * * cd ~/Documents/seo-tests-monitor && /path/to/node /usr/local/bin/seo-tests [arguments] >> ~/Documents/seo-tests-monitor/seo-tests.log 2>&1
+    ```
 
 The five asterisks represent when the job will run (minute, hour, day of month, month, day of week). Adjust these to your desired frequency. For example, to run every day at 12:00 PM noon:
 
