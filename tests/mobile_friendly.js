@@ -310,7 +310,7 @@ module.exports = async (browser, pageType, url, markdownFilePath) => {
 
   const notes =
 `
-## IS
+## NOTES
 - ${mobileFriendlyData.mobileFriendlyTestResultsExtracted.mobile_friendly}
 - Page Resources: ${mobileFriendlyData.mobileFriendlyTestResultsExtracted.resources_status}
 - ${mobileFriendlyData.mobileFriendlyTestResultsExtracted.visual_difference}

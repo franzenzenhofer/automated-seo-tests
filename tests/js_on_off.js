@@ -32,7 +32,7 @@ async function compareScreenshots(imgPath1, imgPath2, outputPath) {
     const numDiffPixels = pixelmatch(img1.data, img2.data, diff.data, width, height, { threshold: 0.1 });
 
     // To not let a scroll bar falsely considered
-    if (numDiffPixels > 50) {
+    if (numDiffPixels > 250) {
         diff.pack().pipe(fs.createWriteStream(outputPath));
         return outputPath;
     }

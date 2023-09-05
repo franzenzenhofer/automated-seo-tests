@@ -74,8 +74,6 @@ async function compareScreenshots(imgPath1, imgPath2, outputPath) {
 
   const numDiffPixels = pixelmatch(img1.data, img2.data, diff.data, width, height, { threshold: 0.1 });
 
-  console.log(numDiffPixels);
-
   // To not let a scroll bar falsely considered
   if (numDiffPixels > 50) {
     diff.pack().pipe(fs.createWriteStream(outputPath));
@@ -373,7 +371,7 @@ module.exports = async (browser, pageType, url, siteUrl, markdownFilePath) => {
 
   const notes =
     `
-  ## IS
+  ## NOTES
   - Page Resources: ${urlInspectionData.inspectUrlTestResultsExtracted.resources_status}
   - ${urlInspectionData.inspectUrlTestResultsExtracted.visual_difference}
   `
