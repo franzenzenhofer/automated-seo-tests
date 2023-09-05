@@ -187,8 +187,6 @@ const mobileFriendlyValidator = (data) => {
   return true;
 };
 
-
-
 /**
  * Executes the mobile-friendly test for a given URL and page type.
  * 
@@ -218,8 +216,6 @@ const runMobileFriendlyTest = async (page, url, pageType) => {
 
   // Save the page render.
   const mobileFriendlyRenderPath = await saveMobileFriendlyRender(page);
-
-  console.log(mobileFriendlyRenderPath);
 
   // Click the 'More Info' tab.
   await waitAndClickByXPath(page, "//div[contains(., 'more info') and @role='tab']");
