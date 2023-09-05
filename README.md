@@ -113,6 +113,8 @@ You can also specify multiple email addresses by separating them with a comma:
 seo-tests -u https://www.example.com -m recipient1@example.com,recipient2@example.com
 ```
 
+Using the Emailing feature requires you to setup a mail service. Please refer to the [Advanced Section - Opting-In for Mailing Functionality](#opting-in-for-mailing-functionality) below.
+
 ## Pro Tips 🌟
 
 - **First-Time Users**: You will be prompted to manually log into your Google account during the first run. After successfully logging in, make sure to return to the terminal and press the `ENTER` key to continue. Don't worry; your credentials will be saved for future use.
@@ -169,23 +171,23 @@ Beyond single runs, you might want to automate the SEO tests to run periodically
 1.  **Setup a dedicated directory for the script execution**  
 First, decide on a directory where the script should run from. A suggestion might be:
 
-```bash
-~/Documents/seo-tests-monitor
-```
+    ```bash
+    ~/Documents/seo-tests-monitor
+    ```
 
-or
+    or
 
-```bash
-C:\Users\YourUsername\Documents\seo-tests-monitor
+    ```bash
+    C:\Users\YourUsername\Documents\seo-tests-monitor
 
-```
+    ```
 
 2.  **Prepare the Tool for Cron Execution**  
 If you've globally linked the SEO tests tool using `npm link`, you can simply call it using the `seo-tests` command. But before setting up the cron job, it's essential to ensure you've executed the command manually at least once. This step is crucial since the initial run requires user input (pressing "ENTER" after logging in to Google), which won't be possible via cron.
 
-```bash
-seo-tests [your-preferred-arguments]
-```
+    ```bash
+    seo-tests [your-preferred-arguments]
+    ```
 
 Ensure you've successfully logged in and that the `cookies.js` file is saved in the current directory.
 
@@ -193,9 +195,9 @@ Ensure you've successfully logged in and that the `cookies.js` file is saved in 
 1.  **Editing the Crontab**  
 Now, open your terminal and enter:
 
-```bash
-crontab -e
-```
+    ```bash
+    crontab -e
+    ```
 
 This allows you to edit the cron jobs.
 
@@ -208,10 +210,10 @@ Append a new line in the format:
 
 The five asterisks represent when the job will run (minute, hour, day of month, month, day of week). Adjust these to your desired frequency. For example, to run every day at 12:00 PM noon:
 
-```bash
-0 12 * * * cd ~/Documents/seo-tests-monitor && /path/to/node /usr/local/bin/seo-tests [arguments] >> ~/Documents/seo-tests-monitor/seo-tests.log 2>&1
+    ```bash
+    0 12 * * * cd ~/Documents/seo-tests-monitor && /path/to/node /usr/local/bin/seo-tests [arguments] >> ~/Documents/seo-tests-monitor/seo-tests.log 2>&1
 
-```
+    ```
 
 3.  **Save and Exit**  
 Save and exit the editor.
@@ -231,9 +233,9 @@ Save and exit the editor.
 7. In the "Program/script" field, browse to the location of your node.exe (commonly located in the C:\Program Files\nodejs directory).
 8. In the "Add arguments (optional)" field, input:
 
-```bash
-"C:\Users\YourUsername\Documents\seo-tests-monitor\your-seo-tests-script.js" [arguments]
-```
+    ```bash
+    "C:\Users\YourUsername\Documents\seo-tests-monitor\your-seo-tests-script.js" [arguments]
+    ```
 
 Replace `YourUsername` with your actual Windows username and `your-seo-tests-script.js`` with the actual name of your script if it's different.
 
@@ -258,21 +260,21 @@ To enhance your automated SEO tests experience, our tool provides the ability to
     *   SendGrid is a cloud-based SMTP provider that lets you send email without having to maintain email servers.
     *   SendGrid offers a free tier that lets you send up to 100 emails per day, making it a cost-effective option for smaller applications.
 
-To select a service, fill in the relevant details in a `.env` file:
+    To select a service, fill in the relevant details in a `.env` file:
 
-```env
-GMAIL_CLIENT_ID=your_gmail_client_id
-GMAIL_CLIENT_SECRET=your_gmail_client_secret
-GMAIL_REFRESH_TOKEN=your_gmail_refresh_token
-```
+    ```env
+    GMAIL_CLIENT_ID=your_gmail_client_id
+    GMAIL_CLIENT_SECRET=your_gmail_client_secret
+    GMAIL_REFRESH_TOKEN=your_gmail_refresh_token
+    ```
 
-or
+    or
 
-```env
-SENDGRID_API_KEY=your_sendgrid_api_key
-```
+    ```env
+    SENDGRID_API_KEY=your_sendgrid_api_key
+    ```
 
-*   If none of the required keys is present mailing will not execute and the script will notify you.
+    *   If none of the required keys is present mailing will not execute and the script will notify you.
 
 ### Setting up Gmail OAuth
 
@@ -313,14 +315,11 @@ Certainly! Obtaining the refresh token involves a series of steps as you have to
     
     *   Take the `Refresh Token` and add it to your `.env` file alongside the `Client ID` and `Client Secret`:
     
-```bash
-GMAIL_CLIENT_ID=Your_Client_ID
-GMAIL_CLIENT_SECRET=Your_Client_Secret
-GMAIL_REFRESH_TOKEN=Your_Refresh_Token
-
-```    
-    
-That's it! Now, every time your application needs to send an email through Gmail, it can use the refresh token to get a new access token, which is used for the actual sending of the email.
+    ```bash
+    GMAIL_CLIENT_ID=Your_Client_ID
+    GMAIL_CLIENT_SECRET=Your_Client_Secret
+    GMAIL_REFRESH_TOKEN=Your_Refresh_Token
+    ```    
 
 ### Setting up SendGrid
 
