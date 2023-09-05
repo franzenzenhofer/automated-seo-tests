@@ -361,7 +361,7 @@ module.exports = async (browser, pageType, url, siteUrl, markdownFilePath) => {
   const urlInspectionData = await runUrlInspectionTest(browser, pageType, url, siteUrl);
 
   // Compare actual screenshot with Rendering
-  const differenceScreenshotPath = await compareScreenshots(urlInspectionData.actualScreenshotPath.screenshotPath, urlInspectionData.inspectUrlRenderPath, `${topDirectory}/screenshots/inspect_url_difference_${timestamp}.png`);
+  const differenceScreenshotPath = await compareScreenshots(urlInspectionData.actualScreenshotPath.screenshotPath, urlInspectionData.inspectUrlRenderPath, `${topDirectory}/screenshots/inspect_url_difference_${sanitizeString(pageType)}_${timestamp}.png`);
 
   // Assign the result of visual comparison to visual_difference
   urlInspectionData.inspectUrlTestResultsExtracted.visual_difference = differenceScreenshotPath

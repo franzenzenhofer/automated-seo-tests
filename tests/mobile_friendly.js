@@ -297,7 +297,7 @@ module.exports = async (browser, pageType, url, markdownFilePath) => {
   const mobileFriendlyData = await runMobileFriendlyTest(page, url, pageType);
 
   // Compare actual screenshot with Rendering
-  const differenceScreenshotPath = await compareScreenshots(actualScreenshotPath.screenshotPath, mobileFriendlyData.mobileFriendlyRenderPath, `${topDirectory}/screenshots/mobile_friendly_difference_${timestamp}.png`);
+  const differenceScreenshotPath = await compareScreenshots(actualScreenshotPath.screenshotPath, mobileFriendlyData.mobileFriendlyRenderPath, `${topDirectory}/screenshots/mobile_friendly_difference_${sanitizeString(pageType)}_${timestamp}.png`);
 
   // Assign the result of visual comparison to visual_difference
   mobileFriendlyData.mobileFriendlyTestResultsExtracted.visual_difference = differenceScreenshotPath
