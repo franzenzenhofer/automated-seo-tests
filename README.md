@@ -350,5 +350,3 @@ For the tool to send emails after running the SEO tests, you'll need to use the 
 This README.md has been written with love by ChatGPT V4. 💖
 
 ---
-
-Feel free to fine-tune this README as needed!
