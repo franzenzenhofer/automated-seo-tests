@@ -5,6 +5,7 @@ const pixelmatch = require('pixelmatch');
 
 const { captureScreenshot } = require('../utils/screenshot');
 const { sanitizeString } = require('../utils/sanitizers');
+const { validateTest } = require('../utils/validation');
 const markdown = require('../utils/markdown');
 
 const topDirectory = '_seo-tests-output';
@@ -30,13 +31,27 @@ async function compareScreenshots(imgPath1, imgPath2, outputPath) {
 
     const numDiffPixels = pixelmatch(img1.data, img2.data, diff.data, width, height, { threshold: 0.1 });
 
-    if (numDiffPixels > 0) {
+    // To not let a scroll bar falsely considered
+    if (numDiffPixels > 50) {
         diff.pack().pipe(fs.createWriteStream(outputPath));
         return outputPath;
     }
 
     return null;
 }
+
+/**
+ * Validates the JS On/Off test based on the difference between two screenshots.
+ * If there are no differences (diffResult is null), the test is passed.
+ * 
+ * @param {Page} page - Puppeteer page instance (not used in this validator, but kept for consistency).
+ * @param {string|null} diffResult - Path to the differential image if differences exist; null otherwise.
+ * @returns {string} - Returns 'passed' if the test passes (diffResult is null), otherwise 'failed'.
+ */
+const jsOnOffValidator = (page, diffResult) => {
+  return diffResult === null ? 'passed' : 'failed';
+};
+
 
 /**
  * Device specifications for iPhone 13.
@@ -101,8 +116,9 @@ module.exports = async (browser, pageType, url, markdownFilePath) => {
   const diffImagePath = path.join(process.cwd(), topDirectory, 'screenshots', `jsonoff_diff_${sanitizeString(pageType)}__${timestamp}.png`);
   const diffResult = await compareScreenshots(jsOnResults.screenshotPath, jsOffResults.screenshotPath, diffImagePath);
 
-  console.log(diffResult);
-  await markdown.generateMarkdownSlideJSonoff('JS on/off', pageType, url, jsOnResults.screenshotPath, jsOffResults.screenshotPath, diffResult, markdownFilePath);
+  const testStatus = await validateTest(page, jsOnOffValidator, diffResult);
+
+  await markdown.generateMarkdownSlideJSonoff('JS on/off', pageType, url, jsOnResults.screenshotPath, jsOffResults.screenshotPath, diffResult, testStatus, markdownFilePath);
 
   await page.close();
 };
