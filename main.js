@@ -168,9 +168,9 @@ global.siteUrl = getSiteUrl(pages);
   const markdownFilePath = await markdown.createNewMarkdownFile(global.siteUrl, outputDir);
   for (const [pageType, url] of Object.entries(pages)) {
     await markdown.generateMarkdownSubTitleSlide(pageType, url, markdownFilePath);
-    const pagespeedData = await pagespeedTest(browser, pageType, url, global.siteUrl, isFirstPage, markdownFilePath);
-    const jsOnOffData = await jsOnOffTest(browser, pageType, url, markdownFilePath);
-    //const mobileFriendlyData = await mobileFriendlyTest(browser, pageType, url, markdownFilePath);
+    //const pagespeedData = await pagespeedTest(browser, pageType, url, global.siteUrl, isFirstPage, markdownFilePath);
+    //const jsOnOffData = await jsOnOffTest(browser, pageType, url, markdownFilePath);
+    const mobileFriendlyData = await mobileFriendlyTest(browser, pageType, url, markdownFilePath);
     //const urlInspectionData = await urlInspectionTest(browser, pageType, url, global.siteUrl, markdownFilePath);
     isFirstPage = false;
   }

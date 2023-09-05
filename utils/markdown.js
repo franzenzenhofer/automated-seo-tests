@@ -206,7 +206,7 @@ ${diffImageMarkdown}
  * @param {string} testUrl - URL for testing mobile-friendliness.
  * @param {string} markdownFilePath - Path to the markdown file where the slide will be appended.
  */
-const generateMarkdownInspectAndMobileFriendly = async (headline, pageType, pageUrl, screenshotPath1, screenshotPath2, testUrl, markdownFilePath) => {
+const generateMarkdownInspectAndMobileFriendly = async (headline, pageType, pageUrl, screenshotPath1, screenshotPath2, testUrl, testStatus, notes, markdownFilePath) => {
   try {
     const markdownDir = path.resolve(process.cwd(), topDirectory, 'markdown');
     const relativeScreenshotPath1 = path.relative(markdownDir, screenshotPath1);
@@ -216,7 +216,7 @@ const generateMarkdownInspectAndMobileFriendly = async (headline, pageType, page
 
       `
 <!-- 
-_class: default 
+_class: default ${testStatus}
 _header: '${pageType} (${pageUrl})'
 -->
 
@@ -233,6 +233,7 @@ _header: '${pageType} (${pageUrl})'
 :::
 
 :::col
+${notes}
 :::
 
 ::::
