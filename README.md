@@ -222,7 +222,7 @@ Save and exit the editor.
 
 📝 **Note**: Ensure that the paths to `node` and your script are correct. You can find the path to `node` using the `which node` command.
 
-### Task Scheduler (for Windows)
+### Task Scheduler (for Windows) - Not Tested :grimacing:
 
 1. Press Win + S and type "Task Scheduler" to open the application from the Start Menu.
 2. In the Actions pane, click "Create Basic Task."
