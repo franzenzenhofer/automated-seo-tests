@@ -23,8 +23,24 @@ const { sleep } = require('./utils/navigation');
 const { getSiteUrl } = require('./utils/sanitizers');
 const markdown = require('./utils/markdown');
 const { convertMarkdown } = require('./utils/conversion');
-const { sendReport } = require('./utils/mailer');
+const { sendReportGmail } = require('./utils/mailerGmail');
 const { sendReportSendGrid } = require('./utils/mailerSendGrid');
+
+async function sendMail(files, toEmail) {
+  // If SendGrid key is present, use SendGrid
+  if (process.env.SENDGRID_API_KEY) {
+    return sendReportSendGrid(files, toEmail);
+  } 
+  // If Gmail keys are present, use Gmail
+  else if (process.env.GMAIL_CLIENT_ID && process.env.GMAIL_CLIENT_SECRET && process.env.GMAIL_REFRESH_TOKEN) {
+    return sendReport(files, toEmail);
+  } 
+  // If neither service is configured, notify the user
+  else {
+    console.error("Mailing details not configured. Please provide either Gmail OAuth details or SendGrid API key in your .env file.");
+    return;
+  }
+}
 
 // Define constants for directory structure.
 const topDirectory = '_seo-tests-output';
@@ -167,7 +183,7 @@ global.siteUrl = getSiteUrl(pages);
     console.log('Conversion completed. Files saved at:', outputPaths);
     if (argv.m || argv.mail) {
       const recipients = argv.m || argv.mail;
-      sendReportSendGrid([outputPaths.pdf], recipients);
+      sendMail([outputPaths.pdf], recipients);
     }
   } catch (error) {
     console.error('Error during conversion:', error);

@@ -60,7 +60,7 @@ async function refreshAccessToken() {
  * @param {string} toEmail - Recipient email address.
  * @throws {Error} Throws an error if sending the email fails.
  */
-async function sendReport(files, toEmail) {
+async function sendReportGmail(files, toEmail) {
   try {
     const newAccessToken = await refreshAccessToken();
 
@@ -83,5 +83,5 @@ async function sendReport(files, toEmail) {
 }
 
 module.exports = {
-  sendReport
+  sendReportGmail
 };
