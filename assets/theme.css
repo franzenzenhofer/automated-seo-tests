@@ -145,4 +145,7 @@ footer a {
 .col:last-child {
   margin-left: 20px;
   margin-right: 0;
+  font-size: 32px;
+  justify-content: center;
 }
+
