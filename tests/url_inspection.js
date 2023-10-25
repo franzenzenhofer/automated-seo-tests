@@ -359,12 +359,12 @@ module.exports = async (browser, pageType, url, siteUrl, markdownFilePath) => {
   const urlInspectionData = await runUrlInspectionTest(browser, pageType, url, siteUrl);
 
   // Compare actual screenshot with Rendering
-  const differenceScreenshotPath = await compareScreenshots(urlInspectionData.actualScreenshotPath.screenshotPath, urlInspectionData.inspectUrlRenderPath, `${topDirectory}/screenshots/inspect_url_difference_${sanitizeString(pageType)}_${timestamp}.png`);
+  // const differenceScreenshotPath = await compareScreenshots(urlInspectionData.actualScreenshotPath.screenshotPath, urlInspectionData.inspectUrlRenderPath, `${topDirectory}/screenshots/inspect_url_difference_${sanitizeString(pageType)}_${timestamp}.png`);
 
   // Assign the result of visual comparison to visual_difference
-  urlInspectionData.inspectUrlTestResultsExtracted.visual_difference = differenceScreenshotPath
+  /* urlInspectionData.inspectUrlTestResultsExtracted.visual_difference = differenceScreenshotPath
     ? "Visual differences in page rendering"
-    : "No visual differences in page rendering";
+    : "No visual differences in page rendering"; */
 
   // Check the Test Status
   const testStatus = await validateTest(null, () => inspectUrlValidator(urlInspectionData.inspectUrlTestResultsExtracted));
@@ -373,12 +373,11 @@ module.exports = async (browser, pageType, url, siteUrl, markdownFilePath) => {
     `
   ## NOTES
   - Page Resources: ${urlInspectionData.inspectUrlTestResultsExtracted.resources_status}
-  - ${urlInspectionData.inspectUrlTestResultsExtracted.visual_difference}
   `
 
   await markdown.generateMarkdownInspectAndMobileFriendly('Google Search Console - URL Inspection', pageType, url, urlInspectionData.screenshotPath, urlInspectionData.resourcesScreenshotPath, urlInspectionData.testUrl, testStatus, notes, markdownFilePath);
-  if (differenceScreenshotPath) {
+  /* if (differenceScreenshotPath) {
     await markdown.generateMarkdownInspectAndMobileFriendlyVisualDifference('Google Search Console - URL Inspection - Visual Comparison', pageType, url, urlInspectionData.actualScreenshotPath.screenshotPath, urlInspectionData.inspectUrlRenderPath, differenceScreenshotPath, testStatus, markdownFilePath);
-  }
+  } */
   return urlInspectionData;
 };

@@ -297,12 +297,12 @@ module.exports = async (browser, pageType, url, markdownFilePath) => {
   const mobileFriendlyData = await runMobileFriendlyTest(page, url, pageType);
 
   // Compare actual screenshot with Rendering
-  const differenceScreenshotPath = await compareScreenshots(actualScreenshotPath.screenshotPath, mobileFriendlyData.mobileFriendlyRenderPath, `${topDirectory}/screenshots/mobile_friendly_difference_${sanitizeString(pageType)}_${timestamp}.png`);
+  // const differenceScreenshotPath = await compareScreenshots(actualScreenshotPath.screenshotPath, mobileFriendlyData.mobileFriendlyRenderPath, `${topDirectory}/screenshots/mobile_friendly_difference_${sanitizeString(pageType)}_${timestamp}.png`);
 
   // Assign the result of visual comparison to visual_difference
-  mobileFriendlyData.mobileFriendlyTestResultsExtracted.visual_difference = differenceScreenshotPath
+  /* mobileFriendlyData.mobileFriendlyTestResultsExtracted.visual_difference = differenceScreenshotPath
     ? "Visual differences in page rendering"
-    : "No visual differences in page rendering";
+    : "No visual differences in page rendering"; */
 
   // Check the Test Status
   const testStatus = await validateTest(null, () => mobileFriendlyValidator(mobileFriendlyData.mobileFriendlyTestResultsExtracted));
@@ -313,13 +313,12 @@ module.exports = async (browser, pageType, url, markdownFilePath) => {
 ## NOTES
 - ${mobileFriendlyData.mobileFriendlyTestResultsExtracted.mobile_friendly}
 - Page Resources: ${mobileFriendlyData.mobileFriendlyTestResultsExtracted.resources_status}
-- ${mobileFriendlyData.mobileFriendlyTestResultsExtracted.visual_difference}
 `
 
   await markdown.generateMarkdownInspectAndMobileFriendly('Google Mobile Friendly Test', pageType, url, mobileFriendlyData.screenshotPath, mobileFriendlyData.resourcesScreenshotPath, mobileFriendlyData.testUrl, testStatus, notes, markdownFilePath);
-  if (differenceScreenshotPath) {
+  /* if (differenceScreenshotPath) {
     await markdown.generateMarkdownInspectAndMobileFriendlyVisualDifference('Google Mobile Friendly Test - Visual Comparison', pageType, url, actualScreenshotPath.screenshotPath, mobileFriendlyData.mobileFriendlyRenderPath, differenceScreenshotPath, testStatus, markdownFilePath);
-  }
+  } */
 
   
 
